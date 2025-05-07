@@ -1,4 +1,3 @@
-import 'dart:math' as Math;
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ void main() {
   runApp(const MyApp());
 }
 
-final FlutterAppAuth appAuth = FlutterAppAuth();
+const FlutterAppAuth appAuth = FlutterAppAuth();
 
 // === Keycloak config ===
 const String clientId = 'co-habit-confidential';
@@ -27,9 +26,9 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Keycloak Demo',
-      home: const LoginPage(),
+      home: LoginPage(),
     );
   }
 }
@@ -45,19 +44,12 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     try {
-      print('Tentative de connexion à Keycloak...');
-      print('URL: $issuer');
-      print('Client ID: $clientId');
-      print('Client Secret: $clientSecret');
-      print('Redirect URL: $redirectUrl');
-      print('Scopes: $scopes');
-
       // Configuration manuelle au lieu de passer par issuer
       final request = AuthorizationTokenRequest(
         clientId,
         redirectUrl,
         clientSecret: clientSecret,
-        serviceConfiguration: AuthorizationServiceConfiguration(
+        serviceConfiguration: const AuthorizationServiceConfiguration(
           authorizationEndpoint: '$issuer/protocol/openid-connect/auth',
           tokenEndpoint: '$issuer/protocol/openid-connect/token',
         ),
@@ -66,33 +58,21 @@ class _LoginPageState extends State<LoginPage> {
         promptValues: ['login'],
       );
 
-      print('Envoi de la demande d\'autorisation...');
       final result = await appAuth.authorizeAndExchangeCode(request);
-      print('Réponse reçue de Keycloak');
 
-      if (result != null && result.accessToken != null) {
+      if (result.accessToken != null) {
         _accessToken = result.accessToken;
-        print('Token reçu: ${_accessToken}');
-        print('Premiers caractères: ${_accessToken!.substring(0, Math.min(30, _accessToken!.length))}...');
 
         // Vérifier si le token contient 'profile'
         if (_accessToken!.contains('profile')) {
-          print('Le token contient le scope profile');
         } else {
-          print('Le token NE contient PAS le scope profile');
         }
 
         _fetchHello();
       } else {
-        print('Pas de token reçu!');
         setState(() => _error = 'Pas de token reçu');
       }
-    } catch (e, stackTrace) {
-      print('Exception lors de l\'authentification:');
-      print('Type d\'erreur: ${e.runtimeType}');
-      print('Message: $e');
-      print('Stack trace:');
-      print(stackTrace.toString().split('\n').take(10).join('\n'));
+    } catch (e) {
 
       setState(() => _error = 'Erreur login : $e');
     }
@@ -106,8 +86,6 @@ class _LoginPageState extends State<LoginPage> {
         headers: {'Authorization': 'Bearer $_accessToken'},
       );
 
-      print('Réponse API: ${response.statusCode}');
-      print('Corps: ${response.body}');
 
       if (response.statusCode == 200) {
         try {
@@ -161,13 +139,12 @@ class _LoginPageState extends State<LoginPage> {
                 try {
                   _login();
                 } catch (e) {
-                  print('Erreur dans onPressed: $e');
                   setState(() => _error = 'Erreur onPressed: $e');
                 }
               },
               child: const Text('Se connecter avec Keycloak'),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
                 _testPublicEndpoint();
@@ -189,8 +166,6 @@ class _LoginPageState extends State<LoginPage> {
       final response = await http.get(
         Uri.parse('$apiBaseUrl/api/public'),
       );
-      print('Réponse API publique: ${response.statusCode}');
-      print('Corps: ${response.body}');
 
       if (response.statusCode == 200) {
         setState(() {

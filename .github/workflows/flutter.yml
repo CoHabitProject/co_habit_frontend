@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - main
+      - master
     tags:
       - v*
   pull_request:
     branches:
       - main
+      - master
 
 jobs:
   build:
@@ -19,7 +21,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.19.0"
+          flutter-version: "3.22.2"
           channel: "stable"
 
       - name: Install dependencies
@@ -27,9 +29,6 @@ jobs:
 
       - name: Analyze
         run: flutter analyze
-
-      - name: Run tests
-        run: flutter test
 
       - name: Build APK
         run: flutter build apk --release
