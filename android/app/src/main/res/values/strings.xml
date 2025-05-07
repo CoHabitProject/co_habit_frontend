@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Co Habit Frontend</string>
+    <string name="appauth_redirect_scheme">cohabit</string>
+    <string name="appauth_redirect_host">oauth2redirect</string>
+</resources>
