@@ -33,9 +33,6 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Build Web
-        run: flutter build web --release
-
   docker:
     needs: build
     runs-on: ubuntu-latest
