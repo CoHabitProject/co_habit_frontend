@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:co_habit_frontend/presentation/screens/onboarding/onboarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;
@@ -14,11 +14,12 @@ const FlutterAppAuth appAuth = FlutterAppAuth();
 const String clientId = 'co-habit-confidential';
 const String clientSecret = 'secret'; // Ajout du client secret
 const String redirectUrl = 'cohabit://oauth2redirect';
-const String issuer = 'http://10.0.2.2:8088/realms/co-habit'; // http://localhost:8088/realms/co-habit
+const String issuer =
+    'http://10.0.2.2:8088/realms/co-habit'; // http://localhost:8088/realms/co-habit
 const List<String> scopes = ['openid', 'profile', 'email'];
 // à la place de 10.0.2.2:
-const String apiBaseUrl = "http://10.0.2.2:8080"; // pour accéder à l'hôte depuis l'émulateur Android
-
+const String apiBaseUrl =
+    "http://10.0.2.2:8080"; // pour accéder à l'hôte depuis l'émulateur Android
 
 String? _accessToken;
 
@@ -27,8 +28,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Keycloak Demo',
-      home: LoginPage(),
+      // home: const LoginPage(),
+      home: OnboardingView(),
     );
   }
 }
@@ -38,6 +41,7 @@ class LoginPage extends StatefulWidget {
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
+
 class _LoginPageState extends State<LoginPage> {
   String? _username;
   String? _error;
@@ -65,15 +69,13 @@ class _LoginPageState extends State<LoginPage> {
 
         // Vérifier si le token contient 'profile'
         if (_accessToken!.contains('profile')) {
-        } else {
-        }
+        } else {}
 
         _fetchHello();
       } else {
         setState(() => _error = 'Pas de token reçu');
       }
     } catch (e) {
-
       setState(() => _error = 'Erreur login : $e');
     }
   }
@@ -86,12 +88,12 @@ class _LoginPageState extends State<LoginPage> {
         headers: {'Authorization': 'Bearer $_accessToken'},
       );
 
-
       if (response.statusCode == 200) {
         try {
           final data = jsonDecode(response.body);
           setState(() {
-            _username = "Bienvenue ${data['username']}!\nEmail: ${data['email']}";
+            _username =
+                "Bienvenue ${data['username']}!\nEmail: ${data['email']}";
             _error = null;
           });
         } catch (e) {
@@ -114,10 +116,12 @@ class _LoginPageState extends State<LoginPage> {
             _error = null;
           });
         } else {
-          setState(() => _error = 'Erreur API: ${fallbackResponse.statusCode} - ${fallbackResponse.body}');
+          setState(() => _error =
+              'Erreur API: ${fallbackResponse.statusCode} - ${fallbackResponse.body}');
         }
       } else {
-        setState(() => _error = 'Erreur API : ${response.statusCode} - Corps de la réponse : ${response.body}');
+        setState(() => _error =
+            'Erreur API : ${response.statusCode} - Corps de la réponse : ${response.body}');
       }
     } catch (e) {
       setState(() => _error = 'Erreur requête : $e');
@@ -132,31 +136,33 @@ class _LoginPageState extends State<LoginPage> {
         child: _username != null
             ? Text(_username!, style: const TextStyle(fontSize: 22))
             : Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                try {
-                  _login();
-                } catch (e) {
-                  setState(() => _error = 'Erreur onPressed: $e');
-                }
-              },
-              child: const Text('Se connecter avec Keycloak'),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                _testPublicEndpoint();
-              },
-              child: const Text('Tester endpoint public'),
-            ),
-            if (_error != null) ...[
-              const SizedBox(height: 12),
-              Text(_error!, style: const TextStyle(color: Colors.red), textAlign: TextAlign.center),
-            ]
-          ],
-        ),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      try {
+                        _login();
+                      } catch (e) {
+                        setState(() => _error = 'Erreur onPressed: $e');
+                      }
+                    },
+                    child: const Text('Se connecter avec Keycloak'),
+                  ),
+                  const SizedBox(height: 12),
+                  ElevatedButton(
+                    onPressed: () {
+                      _testPublicEndpoint();
+                    },
+                    child: const Text('Tester endpoint public'),
+                  ),
+                  if (_error != null) ...[
+                    const SizedBox(height: 12),
+                    Text(_error!,
+                        style: const TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center),
+                  ]
+                ],
+              ),
       ),
     );
   }
@@ -173,7 +179,8 @@ class _LoginPageState extends State<LoginPage> {
           _error = null;
         });
       } else {
-        setState(() => _error = 'Erreur API publique: ${response.statusCode} - ${response.body}');
+        setState(() => _error =
+            'Erreur API publique: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       setState(() => _error = 'Erreur requête publique: $e');
