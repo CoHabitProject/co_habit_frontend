@@ -10,48 +10,77 @@ class SecondOboarding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(
-            gradient: AppTheme.onboardingGradient,
+        const _BuildGradientBackground(),
+        const _BuildContentSection(),
+        _BuildBottomButton(onNext: onNext)
+      ],
+    );
+  }
+}
+
+class _BuildBottomButton extends StatelessWidget {
+  const _BuildBottomButton({
+    required this.onNext,
+  });
+
+  final VoidCallback onNext;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.bottomCenter,
+        heightFactor: 16.3,
+        child: CohabitButton(
+          text: 'Suivant',
+          buttonType: ButtonType.onboarding,
+          onPressed: onNext,
+        ));
+  }
+}
+
+class _BuildContentSection extends StatelessWidget {
+  const _BuildContentSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(top: 60),
+            child: Text("Organizes la vie à plusieurs",
+                textAlign: TextAlign.center, style: AppTheme.onboardingTitle),
           ),
         ),
-        Column(
-          children: [
-            const SafeArea(
-              child: Padding(
-                padding: EdgeInsets.only(top: 60),
-                child: Text("Organizes la vie à plusieurs",
-                    textAlign: TextAlign.center,
-                    style: AppTheme.onboardingTitle),
-              ),
-            ),
-            const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                    "Créez, assignez et suivez les tâches du quotidien.",
-                    textAlign: TextAlign.center,
-                    style: AppTheme.onboardingSubtitle)),
-            const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                    "Chacun sait quoi faire et quand, grâce aux rappels aux statuts en temps réel.",
-                    textAlign: TextAlign.center,
-                    style: AppTheme.onboardingSubtitle)),
-            Padding(
-                padding: const EdgeInsets.only(top: 40),
-                child: Image.asset("assets/onboarding/images/tasks.png")),
-          ],
-        ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            heightFactor: 16.3,
-            child: CohabitButton(
-              text: 'Suivant',
-              buttonType: ButtonType.onboarding,
-              onPressed: onNext,
-            ))
+        const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text("Créez, assignez et suivez les tâches du quotidien.",
+                textAlign: TextAlign.center,
+                style: AppTheme.onboardingSubtitle)),
+        const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+                "Chacun sait quoi faire et quand, grâce aux rappels aux statuts en temps réel.",
+                textAlign: TextAlign.center,
+                style: AppTheme.onboardingSubtitle)),
+        Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: Image.asset("assets/onboarding/images/tasks.png")),
       ],
+    );
+  }
+}
+
+class _BuildGradientBackground extends StatelessWidget {
+  const _BuildGradientBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: const BoxDecoration(
+        gradient: AppTheme.onboardingGradient,
+      ),
     );
   }
 }
