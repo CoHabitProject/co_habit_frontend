@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:co_habit_frontend/config/router/app_router.dart';
 import 'package:co_habit_frontend/presentation/screens/onboarding/onboarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
@@ -27,11 +28,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp.router(
+      routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Keycloak Demo',
-      // home: const LoginPage(),
-      home: OnboardingView(),
     );
   }
 }

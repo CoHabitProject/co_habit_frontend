@@ -2,7 +2,9 @@ import 'package:co_habit_frontend/presentation/screens/onboarding/first_onboardi
 import 'package:co_habit_frontend/presentation/screens/onboarding/fourth_onboarding.dart';
 import 'package:co_habit_frontend/presentation/screens/onboarding/second_oboarding.dart';
 import 'package:co_habit_frontend/presentation/screens/onboarding/third_onboarding.dart';
+import 'package:co_habit_frontend/services/onboarding_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -29,6 +31,14 @@ class _OnboardingViewState extends State<OnboardingView> {
     }
   }
 
+  Future<void> _completeOnboarding() async {
+    await OnboardingService.setOnboardingComplete();
+
+    if (mounted) {
+      context.go('/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +52,7 @@ class _OnboardingViewState extends State<OnboardingView> {
           FirstOnboarding(onNext: _nextPage),
           SecondOboarding(onNext: _nextPage),
           ThirdOnboarding(onNext: _nextPage),
-          FourthOnboarding(onNext: _nextPage)
+          FourthOnboarding(onNext: _completeOnboarding)
         ],
       ),
     );
