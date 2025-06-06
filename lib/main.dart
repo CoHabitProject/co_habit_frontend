@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:co_habit_frontend/config/router/app_router.dart';
-import 'package:co_habit_frontend/presentation/screens/onboarding/onboarding_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;

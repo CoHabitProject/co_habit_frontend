@@ -1,4 +1,3 @@
-import 'package:co_habit_frontend/main.dart';
 import 'package:co_habit_frontend/presentation/screens/auth/login_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/onboarding/onboarding_view.dart';
 import 'package:co_habit_frontend/presentation/screens/temp_home.dart';
