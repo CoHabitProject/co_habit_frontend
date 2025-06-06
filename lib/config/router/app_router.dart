@@ -1,6 +1,4 @@
-import 'package:co_habit_frontend/presentation/screens/auth/login_screen.dart';
-import 'package:co_habit_frontend/presentation/screens/onboarding/onboarding_view.dart';
-import 'package:co_habit_frontend/presentation/screens/temp_home.dart';
+import 'package:co_habit_frontend/presentation/screens/screens.dart';
 import 'package:co_habit_frontend/services/onboarding_service.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,11 +14,11 @@ final appRouter = GoRouter(
 
       if (state.fullPath?.startsWith('/onboarding') == true &&
           isOnboardingComplete) {
-        return '/login';
+        return '/choixInitial';
       }
 
       if (state.fullPath == '/' && isOnboardingComplete) {
-        return '/login';
+        return '/choixInitial';
       }
 
       return null;
@@ -37,5 +35,17 @@ final appRouter = GoRouter(
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/choixInitial',
+        builder: (context, state) => const ChoixInitialScreen(),
+      ),
+      GoRoute(
+        path: '/rejoindreColoc',
+        builder: (context, state) => const RejoindreColocScreen(),
+      ),
+      GoRoute(
+        path: '/creerFoyer',
+        builder: (context, state) => const CreerFoyerScreen(),
       ),
     ]);

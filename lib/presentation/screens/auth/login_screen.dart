@@ -9,8 +9,11 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('TEMP LOGIN SCREEN'),
       ),
-      body: const Center(
-        child: CircularProgressIndicator(),
+      body: Center(
+        child: FilledButton(
+          onPressed: () {},
+          child: const Text('Suivant'),
+        ),
       ),
     );
   }
