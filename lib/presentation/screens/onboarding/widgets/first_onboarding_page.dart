@@ -1,11 +1,11 @@
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
-import 'package:co_habit_frontend/presentation/components/buttons/cohabit_button.dart';
+import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class FirstOnboarding extends StatelessWidget {
+class FirstOnboardingPage extends StatelessWidget {
   final VoidCallback onNext;
-  const FirstOnboarding({super.key, required this.onNext});
+  const FirstOnboardingPage({super.key, required this.onNext});
 
   @override
   Widget build(BuildContext context) {

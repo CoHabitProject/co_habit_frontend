@@ -30,7 +30,7 @@ final appRouter = GoRouter(
       ),
       GoRoute(
         path: '/onboarding',
-        builder: (context, state) => const OnboardingView(),
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: '/login',
