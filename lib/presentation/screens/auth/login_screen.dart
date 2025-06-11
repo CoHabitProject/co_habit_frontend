@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -9,8 +10,13 @@ class LoginScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('TEMP LOGIN SCREEN'),
       ),
-      body: const Center(
-        child: CircularProgressIndicator(),
+      body: Center(
+        child: FilledButton(
+          onPressed: () {
+            context.go('/choixInitial');
+          },
+          child: const Text('Suivant'),
+        ),
       ),
     );
   }

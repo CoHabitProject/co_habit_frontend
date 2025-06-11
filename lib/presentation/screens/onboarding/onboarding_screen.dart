@@ -1,19 +1,19 @@
-import 'package:co_habit_frontend/presentation/screens/onboarding/first_onboarding.dart';
-import 'package:co_habit_frontend/presentation/screens/onboarding/fourth_onboarding.dart';
-import 'package:co_habit_frontend/presentation/screens/onboarding/second_oboarding.dart';
-import 'package:co_habit_frontend/presentation/screens/onboarding/third_onboarding.dart';
-import 'package:co_habit_frontend/services/onboarding_service.dart';
+import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/first_onboarding_page.dart';
+import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/fourth_onboarding_page.dart';
+import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/second_oboarding_page.dart';
+import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/third_onboarding_page.dart';
+import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class OnboardingView extends StatefulWidget {
-  const OnboardingView({super.key});
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingView> createState() => _OnboardingViewState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingViewState extends State<OnboardingView> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -49,10 +49,10 @@ class _OnboardingViewState extends State<OnboardingView> {
           _currentPage = page;
         }),
         children: [
-          FirstOnboarding(onNext: _nextPage),
-          SecondOboarding(onNext: _nextPage),
-          ThirdOnboarding(onNext: _nextPage),
-          FourthOnboarding(onNext: _completeOnboarding)
+          FirstOnboardingPage(onNext: _nextPage),
+          SecondOboardingPage(onNext: _nextPage),
+          ThirdOnboardingPage(onNext: _nextPage),
+          FourthOnboardingPage(onNext: _completeOnboarding)
         ],
       ),
     );

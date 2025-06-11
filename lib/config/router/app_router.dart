@@ -1,7 +1,5 @@
-import 'package:co_habit_frontend/presentation/screens/auth/login_screen.dart';
-import 'package:co_habit_frontend/presentation/screens/onboarding/onboarding_view.dart';
-import 'package:co_habit_frontend/presentation/screens/temp_home.dart';
-import 'package:co_habit_frontend/services/onboarding_service.dart';
+import 'package:co_habit_frontend/presentation/screens/screens.dart';
+import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
@@ -32,10 +30,22 @@ final appRouter = GoRouter(
       ),
       GoRoute(
         path: '/onboarding',
-        builder: (context, state) => const OnboardingView(),
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/choixInitial',
+        builder: (context, state) => const ChoixInitialScreen(),
+      ),
+      GoRoute(
+        path: '/rejoindreColoc',
+        builder: (context, state) => const RejoindreColocScreen(),
+      ),
+      GoRoute(
+        path: '/creerFoyer',
+        builder: (context, state) => const CreerFoyerScreen(),
       ),
     ]);
