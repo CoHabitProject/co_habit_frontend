@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -11,7 +12,9 @@ class LoginScreen extends StatelessWidget {
       ),
       body: Center(
         child: FilledButton(
-          onPressed: () {},
+          onPressed: () {
+            context.go('/choixInitial');
+          },
           child: const Text('Suivant'),
         ),
       ),
