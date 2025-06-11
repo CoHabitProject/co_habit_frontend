@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
+
 import 'package:co_habit_frontend/data/models/creer_foyer_model.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/creer_foyer_data.dart';
@@ -20,7 +23,7 @@ class CreerFoyerRepositoryImpl implements CreerFoyerRepository {
           dateEntree: formData.dateEntree);
       return await remoteDataSource.creerFoyer(model);
     } catch (e) {
-      print('Repository Error $e');
+      stderr.write('Repository Error: $e');
       return false;
     }
   }
