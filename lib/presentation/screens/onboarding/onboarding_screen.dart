@@ -2,7 +2,7 @@ import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/first_
 import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/fourth_onboarding_page.dart';
 import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/second_oboarding_page.dart';
 import 'package:co_habit_frontend/presentation/screens/onboarding/widgets/third_onboarding_page.dart';
-import 'package:co_habit_frontend/services/onboarding_service.dart';
+import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

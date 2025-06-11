@@ -1,5 +1,5 @@
 import 'package:co_habit_frontend/presentation/screens/screens.dart';
-import 'package:co_habit_frontend/services/onboarding_service.dart';
+import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(

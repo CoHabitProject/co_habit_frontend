@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:co_habit_frontend/config/router/app_router.dart';
+import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
+  // init des dépéndences du projet
+  setUpDependencies();
   runApp(const MyApp());
 }
 

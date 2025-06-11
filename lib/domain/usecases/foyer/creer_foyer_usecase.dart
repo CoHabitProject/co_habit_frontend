@@ -7,9 +7,6 @@ class CreerFoyerUseCase {
   CreerFoyerUseCase(this.repository);
 
   Future<bool> execute(CreerFoyerEntity formData) async {
-    if (formData.name.isEmpty || formData.adresse.isEmpty) {
-      return false;
-    }
     return await repository.creerFoyer(formData);
   }
 }
