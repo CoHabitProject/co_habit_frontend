@@ -6,6 +6,7 @@ class AppTheme {
   static const Color darkPrimaryColor = Color(0xFF0056C9);
   static const Color backgroundColor = Color(0xFFF6F9FC);
   static const Color navBarUnselected = Color(0x993F8EFC);
+  static const Color homeCardBackroundColor = Color(0xFFE6F1FD);
   // Fontes de l'application
   static const String primaryFont = 'Manrope';
 
