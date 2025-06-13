@@ -1,6 +1,8 @@
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/home_screen_navbar.dart';
+import 'package:co_habit_frontend/presentation/screens/taches/taches_card.dart';
+import 'package:co_habit_frontend/presentation/screens/taches/utils/tache_status_enum.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/flexible_card.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,38 @@ class _HomeScreenState extends State<HomeScreen> {
   final int _selectedIndex = 0;
   String firstName = 'Rocio';
   String lastName = 'Sierra';
+
+  final tachesInfosMock = <Map<String, dynamic>>[
+    {
+      'firstName': 'Carlos',
+      'lastName': 'Ceren',
+      'title': 'Réparer lavabo',
+      'category': 'Réparation',
+      'date': DateTime(2025, 5, 31),
+      'status': TacheStatus.termine
+    },
+    {
+      'firstName': 'Bertrand',
+      'lastName': 'Renaudin',
+      'title': 'Faire la vaisselle',
+      'category': 'Ménage',
+      'date': DateTime(2025, 5, 22),
+      'status': TacheStatus.enAttente
+    },
+    {
+      'firstName': 'Dmitri',
+      'lastName': 'Chine',
+      'title': 'Acheter PQ',
+      'category': 'Courses',
+      'date': DateTime(2025, 5, 23),
+      'status': TacheStatus.enCours
+    }
+  ];
+
+  String _getInitials(String first, String last) {
+    return '${first.isNotEmpty ? first[0] : ''}${last.isNotEmpty ? last[0] : ''}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,22 +57,48 @@ class _HomeScreenState extends State<HomeScreen> {
         lastName: lastName,
         avatarColor: Colors.blueAccent,
       ),
-      body: const SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _BuildHeaderCards(),
-            SizedBox(
+            const _BuildHeaderCards(),
+            const SizedBox(
               height: 20,
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(left: 8),
               child: Text(
                 'Tâches récentes',
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
               ),
-            )
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            ...tachesInfosMock.map((tache) => TachesCard(
+                title: tache['title'],
+                titleWeight: FontWeight.w700,
+                titleSize: 18,
+                text: tache['category'],
+                textColor: Colors.blueGrey,
+                date: tache['date'],
+                status: tache['status'],
+                initials: _getInitials(tache['firstName'], tache['lastName']),
+                width: 150,
+                height: 90,
+                borderRadius: 20,
+                avatarColor: Colors.grey)),
+            const SizedBox(
+              height: 12,
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 8),
+              child: Text(
+                'Stock',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+              ),
+            ),
           ],
         ),
       ),
@@ -50,9 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _BuildHeaderCards extends StatelessWidget {
-  const _BuildHeaderCards({
-    super.key,
-  });
+  const _BuildHeaderCards();
 
   @override
   Widget build(BuildContext context) {
