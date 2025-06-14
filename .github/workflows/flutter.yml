@@ -74,7 +74,6 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           body: |
             Nouvelle version de Co-Habit Frontend
-
             Changements dans cette version :
           draft: false
           prerelease: false
