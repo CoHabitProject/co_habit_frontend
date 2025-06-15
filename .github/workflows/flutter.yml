@@ -67,17 +67,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Generate changelog
+        run: echo "# New Release have arrived" > ${{ github.workspace }}-changelog.txt
       - name: Create GitHub Release
-        id: create_release
-        uses: comnoco/create-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: "Release ${{ github.ref_name }}"
-          body: |
-            Changelog:
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+          body_path: ${{ github.workspace }}-changelog.txt
+          token: ${{ secrets.GH_PAT }}
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
