@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     xz-utils \
     zip \
     libglu1-mesa \
-    openjdk-11-jdk
+    openjdk-17-jdk
 
 # Install Flutter
 RUN git clone https://github.com/flutter/flutter.git /usr/local/flutter
