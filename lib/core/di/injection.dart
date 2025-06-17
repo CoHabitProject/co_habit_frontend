@@ -10,9 +10,7 @@ import 'package:co_habit_frontend/data/services/datasources/remote/tache_remote_
 import 'package:co_habit_frontend/domain/repositories/creer_foyer_repository.dart';
 import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
 import 'package:co_habit_frontend/domain/repositories/tache_repository.dart';
-import 'package:co_habit_frontend/domain/usecases/foyer/creer_foyer_usecase.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/get_lowest_stock_UC.dart';
-import 'package:co_habit_frontend/domain/usecases/taches/get_last_created_taches_uc.dart';
+import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 

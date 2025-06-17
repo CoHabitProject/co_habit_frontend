@@ -2,7 +2,7 @@ import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
 import 'package:co_habit_frontend/data/models/creer_foyer_model.dart';
-import 'package:co_habit_frontend/domain/usecases/foyer/creer_foyer_usecase.dart';
+import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
 import 'package:flutter/material.dart';
