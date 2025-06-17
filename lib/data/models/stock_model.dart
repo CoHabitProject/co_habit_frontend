@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
 
 class StockModel extends StockEntity {

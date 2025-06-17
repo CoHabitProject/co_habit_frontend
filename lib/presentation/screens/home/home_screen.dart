@@ -4,7 +4,7 @@ import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
 import 'package:co_habit_frontend/domain/entities/tache_entity.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/get_lowest_stock_UC.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/get_lowest_stock_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/get_last_created_taches_uc.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/home_screen_navbar.dart';
