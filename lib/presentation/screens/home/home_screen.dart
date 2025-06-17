@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
+import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
 import 'package:co_habit_frontend/domain/entities/tache_entity.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/get_lowest_stock_UC.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/get_last_created_taches_uc.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/home_screen_navbar.dart';
@@ -24,11 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String lastName = 'Sierra';
   List<TacheEntity> tachesRecentes = [];
   bool tachesIsLoading = true;
+  List<StockEntity> lowestStock = [];
 
   @override
   void initState() {
     super.initState();
     _loadRecentTaches();
+    _loadLowestStock();
   }
 
   Future<void> _loadRecentTaches() async {
@@ -45,22 +49,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  final stockInfoMock = <Map<String, dynamic>>[
-    {
-      'title': 'Hygiène',
-      'itemCount': 3,
-      'totalItems': 10,
-      'color': const Color(0xFF369FFF),
-      'imageAsset': 'assets/images/tasks/soap.png'
-    },
-    {
-      'title': 'Entretien',
-      'itemCount': 8,
-      'totalItems': 16,
-      'color': const Color(0xFFFF993A),
-      'imageAsset': 'assets/images/tasks/broom.png'
+  Future<void> _loadLowestStock() async {
+    try {
+      final useCase = getIt<GetLowestStockUc>();
+      final stock = await useCase.execute();
+
+      setState(() {
+        lowestStock = stock;
+      });
+    } catch (e) {
+      stderr.write('Error : $e');
     }
-  ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,13 +104,13 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: stockInfoMock
+                children: lowestStock
                     .map((stock) => StockCard(
-                        title: stock['title'],
-                        itemCount: stock['itemCount'],
-                        totalItems: stock['totalItems'],
-                        color: stock['color'],
-                        imageAsset: stock['imageAsset']))
+                        title: stock.title,
+                        itemCount: stock.itemCount,
+                        totalItems: stock.totalItems,
+                        color: stock.color,
+                        imageAsset: stock.imageAsset))
                     .toList(),
               ),
             ],

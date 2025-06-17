@@ -2,12 +2,16 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/data/repositories/creer_foyer_repository_impl.dart';
+import 'package:co_habit_frontend/data/repositories/stock_repository_impl.dart';
 import 'package:co_habit_frontend/data/repositories/tache_repository_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
+import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/tache_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/repositories/creer_foyer_repository.dart';
+import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
 import 'package:co_habit_frontend/domain/repositories/tache_repository.dart';
 import 'package:co_habit_frontend/domain/usecases/foyer/creer_foyer_usecase.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/get_lowest_stock_UC.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/get_last_created_taches_uc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -56,9 +60,13 @@ void _registerDataSources() {
   getIt.registerLazySingleton<FoyerRemoteDatasource>(
       () => FoyerRemoteDataSourceImpl(dio: getIt()));
 
-  // Tâche remot datasource
+  // Tâche remote datasource
   getIt.registerLazySingleton<TacheRemoteDatasource>(
       () => TacheRemoteDatasourceImpl(dio: getIt()));
+
+  // Stock remote datasource
+  getIt.registerLazySingleton<StockRemoteDatasource>(
+      () => StockRemoteDatasourceImpl(dio: getIt()));
 }
 
 void _registerRepositories() {
@@ -69,6 +77,10 @@ void _registerRepositories() {
   // Tâche repository
   getIt.registerLazySingleton<TacheRepository>(
       () => TacheRepositoryImpl(tacheRemoteDatasource: getIt()));
+
+  // Stock repository
+  getIt.registerLazySingleton<StockRepository>(
+      () => StockRepositoryImpl(stockRemoteDatasource: getIt()));
 }
 
 void _registerUseCases() {
@@ -77,4 +89,7 @@ void _registerUseCases() {
 
   // Tâche use cases
   getIt.registerLazySingleton(() => GetLastCreatedTachesUc(getIt()));
+
+  // Stock use cases
+  getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
 }
