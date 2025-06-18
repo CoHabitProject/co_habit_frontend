@@ -14,11 +14,11 @@ final appRouter = GoRouter(
 
       if (state.fullPath?.startsWith('/onboarding') == true &&
           isOnboardingComplete) {
-        return '/login';
+        return '/';
       }
 
       if (state.fullPath == '/' && isOnboardingComplete) {
-        return '/login';
+        return '/';
       }
 
       return null;
@@ -26,7 +26,7 @@ final appRouter = GoRouter(
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const TempHome(),
+        builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
         path: '/onboarding',

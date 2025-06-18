@@ -69,7 +69,7 @@ class _BuildContentSection extends StatelessWidget {
                 style: AppTheme.onboardingSubtitle)),
         Padding(
             padding: const EdgeInsets.only(top: 40),
-            child: Image.asset("assets/onboarding/images/stock.png")),
+            child: Image.asset("assets/images/onboarding/stock.png")),
       ],
     );
   }
