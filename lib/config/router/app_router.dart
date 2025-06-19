@@ -14,11 +14,11 @@ final appRouter = GoRouter(
 
       if (state.fullPath?.startsWith('/onboarding') == true &&
           isOnboardingComplete) {
-        return '/';
+        return '/maColoc';
       }
 
       if (state.fullPath == '/' && isOnboardingComplete) {
-        return '/';
+        return '/maColoc';
       }
 
       return null;
@@ -48,4 +48,8 @@ final appRouter = GoRouter(
         path: '/creerFoyer',
         builder: (context, state) => const CreerFoyerScreen(),
       ),
+      GoRoute(
+        path: '/maColoc',
+        builder: (context, state) => const MaColocScreen(),
+      )
     ]);

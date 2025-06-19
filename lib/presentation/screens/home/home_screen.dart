@@ -7,7 +7,7 @@ import 'package:co_habit_frontend/domain/entities/tache_entity.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/home_screen_navbar.dart';
-import 'package:co_habit_frontend/presentation/screens/stock/stock_card.dart';
+import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/screens/taches/taches_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/flexible_card.dart';
 import 'package:flutter/material.dart';

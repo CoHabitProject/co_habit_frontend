@@ -1,7 +1,7 @@
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
-import 'package:co_habit_frontend/data/models/creer_foyer_model.dart';
+import 'package:co_habit_frontend/data/models/foyer_model.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
@@ -63,14 +63,17 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
         ValidationService.validateDateField(_dateEntree) == null;
   }
 
-  CreerFoyerModel _buildFormData() {
-    return CreerFoyerModel(
+  FoyerModel _buildFormData() {
+    return FoyerModel(
+        id: 0,
         name: _nameController.text.trim(),
         ville: _villeController.text.trim(),
         adresse: _adresseController.text.trim(),
         codePostal: _codePostalController.text.trim(),
         nbPersonnes: int.parse(_nbPersonnesController.text.trim()),
-        dateEntree: DateFormat('dd-MM-yyyy').format(_dateEntree!));
+        dateEntree: DateFormat('dd-MM-yyyy').format(_dateEntree!),
+        code: '38256',
+        membres: []);
   }
 
   void _handleSubmissionResult(bool result) {
