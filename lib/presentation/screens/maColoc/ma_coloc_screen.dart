@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
-import 'package:co_habit_frontend/domain/entities/foyer_entity.dart';
-import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
-import 'package:co_habit_frontend/domain/entities/utilisateur_entity.dart';
-import 'package:co_habit_frontend/domain/usecases/foyer/get_foyer_by_code_uc.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_uc.dart';
+import 'package:co_habit_frontend/domain/entities/entities.dart';
+import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
+import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
 import 'package:flutter/material.dart';
 
 class MaColocScreen extends StatefulWidget {
@@ -83,6 +82,19 @@ class _MaColocScreenState extends State<MaColocScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        shape: const CircleBorder(),
+        elevation: 4,
+        backgroundColor: AppTheme.primaryColor,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 35,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: const CustomBottomNavbar(showCenterButton: true),
     );
   }
 

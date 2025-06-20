@@ -14,11 +14,11 @@ final appRouter = GoRouter(
 
       if (state.fullPath?.startsWith('/onboarding') == true &&
           isOnboardingComplete) {
-        return '/maColoc';
+        return '/';
       }
 
       if (state.fullPath == '/' && isOnboardingComplete) {
-        return '/maColoc';
+        return '/';
       }
 
       return null;

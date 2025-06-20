@@ -1,17 +1,9 @@
 import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
-import 'package:co_habit_frontend/data/repositories/foyer_repository_impl.dart';
-import 'package:co_habit_frontend/data/repositories/stock_repository_impl.dart';
-import 'package:co_habit_frontend/data/repositories/tache_repository_impl.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/tache_remote_datasource.dart';
-import 'package:co_habit_frontend/domain/repositories/foyer_repository.dart';
-import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
-import 'package:co_habit_frontend/domain/repositories/tache_repository.dart';
-import 'package:co_habit_frontend/domain/usecases/foyer/get_foyer_by_code_uc.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_uc.dart';
+import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
+import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
+import 'package:co_habit_frontend/domain/repositories/repositories.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
