@@ -5,9 +5,8 @@ import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
-import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
-import 'package:co_habit_frontend/presentation/screens/taches/taches_card.dart';
+import 'package:co_habit_frontend/presentation/screens/taches/widgets/taches_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/flexible_card.dart';
 import 'package:flutter/material.dart';
 
@@ -113,8 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-        ),
-        bottomNavigationBar: const CustomBottomNavbar(showCenterButton: false));
+        ));
   }
 
   Widget _buildSectionTitle(String title) {

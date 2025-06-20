@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
-import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
 import 'package:flutter/material.dart';
 
 class MaColocScreen extends StatefulWidget {
@@ -55,47 +53,33 @@ class _MaColocScreenState extends State<MaColocScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          foyer?.name ?? 'Ma coloc',
-          style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildCodeSection(foyer?.code ?? '12345'),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Membres'),
-              const SizedBox(height: 12),
-              _buildMembresSection(foyer?.membres ?? []),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Stock'),
-              const SizedBox(height: 12),
-              _buildStockSection(stock),
-            ],
+        appBar: AppBar(
+          title: Text(
+            foyer?.name ?? 'Ma coloc',
+            style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
           ),
+          centerTitle: true,
+          elevation: 0,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        shape: const CircleBorder(),
-        elevation: 4,
-        backgroundColor: AppTheme.primaryColor,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 35,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: const CustomBottomNavbar(showCenterButton: true),
-    );
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildCodeSection(foyer?.code ?? '12345'),
+                const SizedBox(height: 20),
+                _buildSectionTitle('Membres'),
+                const SizedBox(height: 12),
+                _buildMembresSection(foyer?.membres ?? []),
+                const SizedBox(height: 20),
+                _buildSectionTitle('Stock'),
+                const SizedBox(height: 12),
+                _buildStockSection(stock),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _buildCodeSection(String code) {

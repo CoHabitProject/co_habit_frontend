@@ -8,13 +8,9 @@ class CustomBottomNavbar extends StatelessWidget {
   const CustomBottomNavbar({super.key, required this.showCenterButton});
 
   static const _navItems = [
-    {'icon': Icons.home, 'label': 'Home', 'route': '/'},
-    {
-      'icon': Icons.attach_money,
-      'label': 'Dépenses',
-      'route': '/rejoindreColoc'
-    },
-    {'icon': Icons.check_box, 'label': 'Tâches', 'route': '/creerFoyer'},
+    {'icon': Icons.home, 'label': 'Home', 'route': '/home'},
+    {'icon': Icons.attach_money, 'label': 'Dépenses', 'route': '/depenses'},
+    {'icon': Icons.check_box, 'label': 'Tâches', 'route': '/taches'},
     {'icon': Icons.group, 'label': 'Coloc', 'route': '/maColoc'},
   ];
 
