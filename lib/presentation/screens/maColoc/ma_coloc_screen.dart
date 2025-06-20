@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
+import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MaColocScreen extends StatefulWidget {
   const MaColocScreen({super.key});
@@ -22,6 +25,19 @@ class _MaColocScreenState extends State<MaColocScreen> {
     super.initState();
     _loadStock();
     _loadFoyer();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final controller =
+          Provider.of<FloatingNavbarController>(context, listen: false);
+      controller.show(action: () {
+        showDialog(
+          context: context,
+          builder: (_) => const AlertDialog(
+            title: Text('Ajouter type de stock'),
+          ),
+        );
+      });
+    });
   }
 
   Future<void> _loadFoyer() async {
@@ -53,33 +69,27 @@ class _MaColocScreenState extends State<MaColocScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            foyer?.name ?? 'Ma coloc',
-            style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+      appBar: ScreenAppBar(title: foyer?.name ?? ''),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildCodeSection(foyer?.code ?? '12345'),
+              const SizedBox(height: 20),
+              _buildSectionTitle('Membres'),
+              const SizedBox(height: 12),
+              _buildMembresSection(foyer?.membres ?? []),
+              const SizedBox(height: 20),
+              _buildSectionTitle('Stock'),
+              const SizedBox(height: 12),
+              _buildStockSection(stock),
+            ],
           ),
-          centerTitle: true,
-          elevation: 0,
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildCodeSection(foyer?.code ?? '12345'),
-                const SizedBox(height: 20),
-                _buildSectionTitle('Membres'),
-                const SizedBox(height: 12),
-                _buildMembresSection(foyer?.membres ?? []),
-                const SizedBox(height: 20),
-                _buildSectionTitle('Stock'),
-                const SizedBox(height: 12),
-                _buildStockSection(stock),
-              ],
-            ),
-          ),
-        ));
+      ),
+    );
   }
 
   Widget _buildCodeSection(String code) {

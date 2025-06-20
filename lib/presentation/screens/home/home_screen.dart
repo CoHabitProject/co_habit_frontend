@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
+import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
@@ -9,6 +10,7 @@ import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_car
 import 'package:co_habit_frontend/presentation/screens/taches/widgets/taches_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/flexible_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,6 +31,17 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadRecentTaches();
     _loadLowestStock();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final controller =
+          Provider.of<FloatingNavbarController>(context, listen: false);
+      controller.hide(); // Cache le bouton sur cet écran
+    });
   }
 
   Future<void> _loadRecentTaches() async {

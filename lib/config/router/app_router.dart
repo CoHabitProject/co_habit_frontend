@@ -1,7 +1,7 @@
-import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/presentation/screens/screens.dart';
 import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
+import 'package:co_habit_frontend/presentation/widgets/common/floating_navbar_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -79,19 +79,7 @@ final appRouter = GoRouter(
             body: child,
             bottomNavigationBar:
                 CustomBottomNavbar(showCenterButton: showCenterButton),
-            floatingActionButton: showCenterButton
-                ? FloatingActionButton(
-                    onPressed: () {},
-                    shape: const CircleBorder(),
-                    elevation: 4,
-                    backgroundColor: AppTheme.primaryColor,
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 35,
-                    ),
-                  )
-                : null,
+            floatingActionButton: const FloatingNavbarButton(),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
           );
