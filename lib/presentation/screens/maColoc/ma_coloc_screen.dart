@@ -6,6 +6,7 @@ import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
+import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class MaColocScreen extends StatefulWidget {
 class _MaColocScreenState extends State<MaColocScreen> {
   List<StockEntity> stock = [];
   FoyerEntity? foyer;
+  bool _isBottomSheetOpen = false;
 
   @override
   void initState() {
@@ -26,18 +28,37 @@ class _MaColocScreenState extends State<MaColocScreen> {
     _loadStock();
     _loadFoyer();
 
+    final List<ListTile> buttonActions = [
+      ListTile(
+        title: const Text('Ajouter un type de stock',
+            style: TextStyle(color: Colors.blue)),
+        onTap: () {
+          Navigator.pop(context);
+          print('Ajouter type de stock');
+        },
+      ),
+    ];
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final controller =
           Provider.of<FloatingNavbarController>(context, listen: false);
       controller.show(action: () {
-        showDialog(
-          context: context,
-          builder: (_) => const AlertDialog(
-            title: Text('Ajouter type de stock'),
-          ),
-        );
+        showStockMenu(context, buttonActions);
       });
     });
+  }
+
+  void showStockMenu(BuildContext context, List<ListTile> actions) {
+    if (_isBottomSheetOpen) return;
+    _isBottomSheetOpen = true;
+    showCustomActionSheet(
+            context: context,
+            title: 'Ajout stock',
+            subTitle: 'Vous pouvez ajouter un nouveau type de stock',
+            actions: actions)
+        .whenComplete(
+      () => _isBottomSheetOpen = false,
+    );
   }
 
   Future<void> _loadFoyer() async {
