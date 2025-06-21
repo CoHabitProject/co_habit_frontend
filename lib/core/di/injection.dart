@@ -20,6 +20,7 @@ import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 
 final getIt = GetIt.instance;
 
@@ -57,7 +58,7 @@ void _registerExternalDependencies() {
       requestHeader: true,
       responseHeader: true,
       error: true,
-      logPrint: (object) => stderr.write('[DIO] $object'),
+      logPrint: (object) => debugPrint('[DIO] $object'),
     ));
 
     return dio;
