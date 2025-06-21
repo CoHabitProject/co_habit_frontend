@@ -18,11 +18,10 @@ const String clientId = 'co-habit-confidential';
 const String clientSecret = 'secret'; // Ajout du client secret
 const String redirectUrl = 'cohabit://oauth2redirect';
 const String issuer =
-    'http://10.0.2.2:8088/realms/co-habit'; // http://localhost:8088/realms/co-habit
+    'http://localhost:8088/realms/co-habit'; // http://localhost:8088/realms/co-habit
 const List<String> scopes = ['openid', 'profile', 'email'];
 // à la place de 10.0.2.2:
-const String apiBaseUrl =
-    "http://10.0.2.2:8080"; // pour accéder à l'hôte depuis l'émulateur Android
+const String apiBaseUrl = "http://localhost:8080"; // pour accéder à l'hôte depuis l'émulateur Android
 
 String? _accessToken;
 
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Keycloak Demo',
+      title: 'CoHabit',
     );
   }
 }
