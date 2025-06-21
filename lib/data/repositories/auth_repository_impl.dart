@@ -1,4 +1,5 @@
 import 'package:co_habit_frontend/data/services/datasources/remote/auth_remote_datasource.dart';
+import 'package:co_habit_frontend/domain/entities/register_data.dart';
 import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
 import 'package:co_habit_frontend/domain/repositories/auth_repository.dart';
 
@@ -9,11 +10,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> login(UserCredentials credentials){
-    return datasource.login(credentials.email,credentials.password);
+    return datasource.login(credentials);
   }
 
-  Future<bool> signup(){
-    return datasource.signup('name', 'email', '43232', 'password', 'confirmPassword');
+  Future<bool> signup(RegisterData data){
+    return datasource.signup(data);
   }
 
   Future<void> logout(){

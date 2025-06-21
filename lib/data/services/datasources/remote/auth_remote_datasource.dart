@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
+import 'package:co_habit_frontend/domain/entities/register_data.dart';
+import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -9,14 +11,11 @@ class AuthRemoteDatasource {
 
   AuthRemoteDatasource(this.dio,this.storage);
 
-  Future<bool> login(String email,String password)async{
+  Future<bool> login(UserCredentials credentials)async{
     try {
       final response = await dio.post(
         AppConstants.login,
-        data: jsonEncode({
-          'username': email,
-          'password': password
-        }),
+        data: jsonEncode(credentials.toJson()),
       );
 
       if(response.statusCode == 200 && response.data != null) {
@@ -31,15 +30,14 @@ class AuthRemoteDatasource {
     return false;
   }
 
-  Future<bool> signup(String name, String email, String number, String password, String confirmPassword) async {
+  Future<bool> signup(RegisterData data) async {
     try {
+      // TODO coller le lastname et le firstname ici plutôt
+      //      que d'avoir un champ "fullname"
+
       final response = await dio.post(
         AppConstants.register,
-        data: jsonEncode({
-          'username': name,
-          'email': email,
-          'password': password
-        }),
+        data: jsonEncode(data.toJson())
       );
 
       if(response.statusCode == 201 && response.data != null) {
@@ -60,7 +58,7 @@ class AuthRemoteDatasource {
       if(refreshToken==null)return false;
       final response=await dio.post(
           AppConstants.refresh,
-          data: {'refreshToken': refreshToken}
+          data: jsonEncode({'refreshToken': refreshToken})
       );
       if(response.statusCode==200){
         final tokens=response.data;

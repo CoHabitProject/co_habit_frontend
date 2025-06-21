@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController=TextEditingController();
   bool _isLoading=false;
   
@@ -22,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
     
     final success=await loginUseCase(
       UserCredentials(
-        email:_emailController.text.trim(),
+        username:_usernameController.text.trim(),
         password:_passwordController.text.trim(),
       ),
     );
@@ -46,8 +46,8 @@ class _LoginScreenState extends State<LoginScreen> {
         padding:const EdgeInsets.all(16.0),
         child:Column(children:[
           TextField(
-            controller:_emailController,
-            decoration:const InputDecoration(labelText:'Email'),
+            controller:_usernameController,
+            decoration:const InputDecoration(labelText:'Nom d\'utilisateur'),
           ),
           TextField(
             controller:_passwordController,
@@ -67,24 +67,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-// class LoginScreen extends StatelessWidget {
-//   const LoginScreen({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('TEMP LOGIN SCREEN'),
-//       ),
-//       body: Center(
-//         child: FilledButton(
-//           onPressed: () {
-//             context.go('/choixInitial');
-//           },
-//           child: const Text('Suivant'),
-//         ),
-//       ),
-//     );
-//   }
-// }
