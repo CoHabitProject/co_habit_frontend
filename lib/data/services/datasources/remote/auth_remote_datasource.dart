@@ -35,22 +35,16 @@ class AuthRemoteDatasource {
 
   Future<bool> signup(RegisterData data) async {
     try {
-      // TODO coller le lastname et le firstname ici plutôt
-      //      que d'avoir un champ "fullname"
-
       final response = await dio.post(
         AppConstants.register,
         data: jsonEncode(data.toJson())
       );
 
-      if(response.statusCode == 201 && response.data != null) {
-        final tokens = response.data;
-        await storage.write(key: 'jwt', value: tokens['accessToken']);
-        await storage.write(key: 'refreshToken', value: tokens['refreshToken']);
+      if(response.statusCode == 201) {
         return true;
       }
     } catch(e) {
-      print('Signup error');
+      print('Signup error : $e');
     }
     return false;
   }

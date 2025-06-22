@@ -15,6 +15,7 @@ import 'package:co_habit_frontend/domain/repositories/creer_foyer_repository.dar
 import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
 import 'package:co_habit_frontend/domain/repositories/tache_repository.dart';
 import 'package:co_habit_frontend/domain/usecases/auth/login_usecase.dart';
+import 'package:co_habit_frontend/domain/usecases/auth/signup_usecase.dart';
 import 'package:co_habit_frontend/domain/usecases/foyer/creer_foyer_usecase.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:dio/dio.dart';
@@ -113,6 +114,10 @@ void _registerUseCases() {
   // Auth
   getIt.registerFactory<LoginUseCase>(
         () => LoginUseCase(getIt<AuthRepository>()),
+  );
+
+  getIt.registerFactory<SignupUseCase>(
+      () => SignupUseCase(getIt<AuthRepository>()),
   );
 
   // Foyer

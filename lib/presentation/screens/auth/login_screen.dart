@@ -62,6 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
               child: const Text('Connexion'
             ),
           ),
+          TextButton(
+              onPressed: () {
+                context.go('/signup');
+              },
+              child: const Text('Pas encore de compte ? Inscrivez-vous ici.')
+          ),
         ]),
       ),
     );
