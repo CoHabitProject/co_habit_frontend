@@ -87,7 +87,8 @@ final appRouter = GoRouter(
 
           return Scaffold(
             body: child,
-            bottomNavigationBar: CustomBottomNavbar(showCenterButton: true),
+            bottomNavigationBar:
+                CustomBottomNavbar(showCenterButton: showCenterButton),
             floatingActionButton: FloatingNavbarButton(routePath: stringPath),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
