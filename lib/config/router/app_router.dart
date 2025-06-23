@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/presentation/screens/maColoc/stock_detail_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/screens.dart';
 import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
@@ -50,36 +51,44 @@ final appRouter = GoRouter(
         routes: [
           GoRoute(
             path: '/home',
+            name: '/home',
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
             path: '/maColoc',
+            name: '/maColoc',
             builder: (context, state) => const MaColocScreen(),
           ),
           GoRoute(
+            path: '/maColoc/stock/:stockId',
+            name: '/maColoc/stock/:stockId',
+            builder: (context, state) {
+              final stockId = int.parse(state.pathParameters['stockId']!);
+              return StockDetailScreen(stockId: stockId);
+            },
+          ),
+          GoRoute(
             path: '/taches',
+            name: '/taches',
             builder: (context, state) => const TachesScreen(),
           ),
           GoRoute(
             path: '/depenses',
+            name: '/depenses',
             builder: (context, state) => const DepensesScreen(),
           )
         ],
         builder: (context, state, child) {
-          final currentPath =
-              GoRouter.of(context).routeInformationProvider.value.uri;
+          final stringPath = state.uri.toString();
 
-          final String stringPath = currentPath.toString();
-
-          final showCenterButton = stringPath.startsWith('/maColoc') ||
-              stringPath.startsWith('/taches') ||
-              stringPath.startsWith('/depenses');
+          final showCenterButton = stringPath.contains('/maColoc') ||
+              stringPath.contains('/taches') ||
+              stringPath.contains('/depenses');
 
           return Scaffold(
             body: child,
-            bottomNavigationBar:
-                CustomBottomNavbar(showCenterButton: showCenterButton),
-            floatingActionButton: const FloatingNavbarButton(),
+            bottomNavigationBar: CustomBottomNavbar(showCenterButton: true),
+            floatingActionButton: FloatingNavbarButton(routePath: stringPath),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
           );

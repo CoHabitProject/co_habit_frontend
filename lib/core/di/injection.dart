@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
+import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
@@ -45,6 +46,8 @@ void _registerExternalDependencies() {
 
     return dio;
   });
+
+  getIt.registerLazySingleton(() => FloatingNavbarController());
 }
 
 void _registerDataSources() {

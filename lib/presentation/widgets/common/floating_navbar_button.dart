@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FloatingNavbarButton extends StatelessWidget {
-  const FloatingNavbarButton({super.key});
+  final String routePath;
+  const FloatingNavbarButton({super.key, required this.routePath});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,9 @@ class FloatingNavbarButton extends StatelessWidget {
       maintainAnimation: true,
       maintainSize: true,
       child: FloatingActionButton(
-        onPressed: controller.trigger,
+        onPressed: () {
+          context.read<FloatingNavbarController>().triggerForRoute(routePath);
+        },
         shape: const CircleBorder(),
         backgroundColor: Colors.blue,
         child: const Icon(

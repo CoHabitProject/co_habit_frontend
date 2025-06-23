@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
+import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
+import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class MaColocScreen extends StatefulWidget {
@@ -17,34 +20,35 @@ class MaColocScreen extends StatefulWidget {
 }
 
 class _MaColocScreenState extends State<MaColocScreen> {
-  List<StockEntity> stock = [];
   FoyerEntity? foyer;
   bool _isBottomSheetOpen = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    context.read<FloatingNavbarController>().setActionForRoute(
+      '/maColoc',
+      () {
+        showStockMenu(context, [
+          ListTile(
+            title: const Text('Ajouter un type de stock',
+                style: TextStyle(color: Colors.blue)),
+            onTap: () {
+              Navigator.pop(context);
+              print('Ajouter type de stock');
+            },
+          ),
+        ]);
+      },
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _loadStock();
     _loadFoyer();
-
-    final List<ListTile> buttonActions = [
-      ListTile(
-        title: const Text('Ajouter un type de stock',
-            style: TextStyle(color: Colors.blue)),
-        onTap: () {
-          Navigator.pop(context);
-          print('Ajouter type de stock');
-        },
-      ),
-    ];
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final controller =
-          Provider.of<FloatingNavbarController>(context, listen: false);
-      controller.show(action: () {
-        showStockMenu(context, buttonActions);
-      });
-    });
   }
 
   void showStockMenu(BuildContext context, List<ListTile> actions) {
@@ -78,9 +82,9 @@ class _MaColocScreenState extends State<MaColocScreen> {
       final useCase = getIt<GetAllStockUc>();
       final stockData = await useCase.execute();
 
-      setState(() {
-        stock = stockData;
-      });
+      if (!mounted) return;
+      final stockProvider = Provider.of<StockProvider>(context, listen: false);
+      stockProvider.setStock(stockData.whereType<StockModel>().toList());
     } catch (e) {
       stderr.write('Error : $e');
     }
@@ -104,7 +108,7 @@ class _MaColocScreenState extends State<MaColocScreen> {
               const SizedBox(height: 20),
               _buildSectionTitle('Stock'),
               const SizedBox(height: 12),
-              _buildStockSection(stock),
+              _buildStockSection(context),
             ],
           ),
         ),
@@ -116,9 +120,7 @@ class _MaColocScreenState extends State<MaColocScreen> {
     return Column(
       children: [
         const Text("Code", style: TextStyle(color: Colors.grey)),
-        const SizedBox(
-          height: 5,
-        ),
+        const SizedBox(height: 5),
         Text(
           code,
           style: const TextStyle(
@@ -141,7 +143,8 @@ class _MaColocScreenState extends State<MaColocScreen> {
     );
   }
 
-  Widget _buildStockSection(List<StockEntity> stock) {
+  Widget _buildStockSection(BuildContext context) {
+    final stock = context.watch<StockProvider>().stock;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -160,6 +163,9 @@ class _MaColocScreenState extends State<MaColocScreen> {
           color: s.color,
           imageAsset: s.imageAsset,
           itemCountPercentage: s.itemCountPercentage,
+          onTap: () {
+            context.push('/maColoc/stock/${s.id}');
+          },
         );
       },
     );
