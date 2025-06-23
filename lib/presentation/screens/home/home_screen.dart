@@ -115,11 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: lowestStock
                       .map((stock) => StockCard(
-                          title: stock.title,
-                          itemCount: stock.itemCount,
-                          totalItems: stock.totalItems,
-                          color: stock.color,
-                          imageAsset: stock.imageAsset))
+                            title: stock.title,
+                            itemCount: stock.itemCount,
+                            totalItems: stock.totalItems,
+                            color: stock.color,
+                            imageAsset: stock.imageAsset,
+                            itemCountPercentage: stock.itemCountPercentage,
+                          ))
                       .toList(),
                 ),
               ],

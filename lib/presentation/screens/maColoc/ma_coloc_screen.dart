@@ -5,7 +5,6 @@ import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
-import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
 import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -155,11 +154,13 @@ class _MaColocScreenState extends State<MaColocScreen> {
       itemBuilder: (context, index) {
         final s = stock[index];
         return StockCard(
-            title: s.title,
-            itemCount: s.itemCount,
-            totalItems: s.totalItems,
-            color: s.color,
-            imageAsset: s.imageAsset);
+          title: s.title,
+          itemCount: s.itemCount,
+          totalItems: s.totalItems,
+          color: s.color,
+          imageAsset: s.imageAsset,
+          itemCountPercentage: s.itemCountPercentage,
+        );
       },
     );
   }

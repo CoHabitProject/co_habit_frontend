@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 abstract class StockRemoteDatasource {
   Future<List<StockModel>> getLowestStock();
   Future<List<StockModel>> getAllStock();
+  Future<StockModel> updateStock(StockModel stock);
 }
 
 class StockRemoteDatasourceImpl implements StockRemoteDatasource {
@@ -41,6 +42,22 @@ class StockRemoteDatasourceImpl implements StockRemoteDatasource {
       return List.empty();
     } catch (e) {
       stderr.write('API error on getAllStock: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<StockModel> updateStock(StockModel stock) async {
+    try {
+      final response = await dio.post('/stock/updateStock', data: stock);
+      final json = response.data;
+
+      if (response.statusCode == 200) {
+        return StockModel.fromJson(json);
+      }
+      throw Exception('Error on updateStock, pas possbile de update');
+    } catch (e) {
+      stderr.write('API errror on updateStock: $e');
       rethrow;
     }
   }
