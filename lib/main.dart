@@ -1,14 +1,26 @@
 import 'dart:convert';
 import 'package:co_habit_frontend/config/router/app_router.dart';
+import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
+import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 void main() {
   // init des dépéndences du projet
   setUpDependencies();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => FloatingNavbarController()),
+        ChangeNotifierProvider(
+            create: (_) => StockProvider(stockRepository: getIt()))
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 const FlutterAppAuth appAuth = FlutterAppAuth();

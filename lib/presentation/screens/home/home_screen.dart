@@ -1,16 +1,16 @@
 import 'dart:io';
 
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
+import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
-import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
-import 'package:co_habit_frontend/domain/entities/tache_entity.dart';
+import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
-import 'package:co_habit_frontend/presentation/screens/home/widgets/home_screen_navbar.dart';
-import 'package:co_habit_frontend/presentation/screens/stock/stock_card.dart';
-import 'package:co_habit_frontend/presentation/screens/taches/taches_card.dart';
+import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
+import 'package:co_habit_frontend/presentation/screens/taches/widgets/taches_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/flexible_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,9 +20,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int _selectedIndex = 0;
-  String firstName = 'Rocio';
-  String lastName = 'Sierra';
+  String firstName = 'Carlos';
+  String lastName = 'Ceren';
   List<TacheEntity> tachesRecentes = [];
   bool tachesIsLoading = true;
   List<StockEntity> lowestStock = [];
@@ -32,6 +31,17 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _loadRecentTaches();
     _loadLowestStock();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final controller =
+          Provider.of<FloatingNavbarController>(context, listen: false);
+      controller.hide(); // Cache le bouton sur cet écran
+    });
   }
 
   Future<void> _loadRecentTaches() async {
@@ -64,61 +74,60 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-          firstName: firstName,
-          lastName: lastName,
-          avatarColor: Colors.blueAccent),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const _BuildHeaderCards(),
-              const SizedBox(height: 12),
-              _buildSectionTitle('Tâches Récentes'),
-              const SizedBox(height: 12),
-              if (tachesIsLoading)
-                const CircularProgressIndicator()
-              else if (tachesRecentes.isEmpty)
-                const Text('Aucune tâche récente')
-              else
-                ...tachesRecentes.map(
-                  (tache) => TachesCard(
-                      title: tache.title,
-                      titleWeight: FontWeight.w700,
-                      titleSize: 18,
-                      text: tache.category,
-                      textColor: Colors.blueGrey,
-                      date: tache.date,
-                      status: tache.status,
-                      initials: _getInitials(tache.firstName, tache.lastName),
-                      width: 150,
-                      height: 90,
-                      borderRadius: 20,
-                      avatarColor: Colors.grey),
+        appBar: CustomAppBar(
+            firstName: firstName,
+            lastName: lastName,
+            avatarColor: Colors.blueAccent),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const _BuildHeaderCards(),
+                const SizedBox(height: 12),
+                _buildSectionTitle('Tâches Récentes'),
+                const SizedBox(height: 12),
+                if (tachesIsLoading)
+                  const CircularProgressIndicator()
+                else if (tachesRecentes.isEmpty)
+                  const Text('Aucune tâche récente')
+                else
+                  ...tachesRecentes.map(
+                    (tache) => TachesCard(
+                        title: tache.title,
+                        titleWeight: FontWeight.w700,
+                        titleSize: 18,
+                        text: tache.category,
+                        textColor: Colors.blueGrey,
+                        date: tache.date,
+                        status: tache.status,
+                        initials: _getInitials(tache.firstName, tache.lastName),
+                        width: 150,
+                        height: 90,
+                        borderRadius: 20,
+                        avatarColor: Colors.grey),
+                  ),
+                const SizedBox(height: 10),
+                _buildSectionTitle('Stock'),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: lowestStock
+                      .map((stock) => StockCard(
+                            title: stock.title,
+                            itemCount: stock.itemCount,
+                            totalItems: stock.totalItems,
+                            color: stock.color,
+                            imageAsset: stock.imageAsset,
+                            itemCountPercentage: stock.itemCountPercentage,
+                          ))
+                      .toList(),
                 ),
-              const SizedBox(height: 10),
-              _buildSectionTitle('Stock'),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: lowestStock
-                    .map((stock) => StockCard(
-                        title: stock.title,
-                        itemCount: stock.itemCount,
-                        totalItems: stock.totalItems,
-                        color: stock.color,
-                        imageAsset: stock.imageAsset))
-                    .toList(),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar:
-          HomeScreenNavbar(currentIndex: _selectedIndex, onTap: (int index) {}),
-    );
+        ));
   }
 
   Widget _buildSectionTitle(String title) {
