@@ -2,6 +2,7 @@
 export 'package:co_habit_frontend/presentation/screens/maColoc/ajout_stock_screen.dart';
 export 'package:co_habit_frontend/presentation/screens/maColoc/stock_detail_screen.dart';
 export 'package:co_habit_frontend/presentation/screens/auth/login_screen.dart';
+export 'package:co_habit_frontend/presentation/screens/auth/signup_screen.dart';
 export 'package:co_habit_frontend/presentation/screens/depenses/depenses_screen.dart';
 export 'package:co_habit_frontend/presentation/screens/foyer/choix_initial_screen.dart';
 export 'package:co_habit_frontend/presentation/screens/foyer/creer_foyer_screen.dart';

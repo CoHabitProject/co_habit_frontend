@@ -31,7 +31,14 @@ final appRouter = GoRouter(
       ),
       GoRoute(
         path: '/login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) {
+          final message = state.extra as String?;
+          return LoginScreen(initialMessage: message);
+        },
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignupScreen(),
       ),
       GoRoute(
         path: '/choixInitial',

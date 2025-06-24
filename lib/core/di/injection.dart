@@ -1,18 +1,25 @@
 import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
-import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
-import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
-import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
-import 'package:co_habit_frontend/domain/repositories/repositories.dart';
+import 'package:co_habit_frontend/data/repositories/creer_foyer_repository_impl.dart';
+import 'package:co_habit_frontend/data/repositories/stock_repository_impl.dart';
+import 'package:co_habit_frontend/data/repositories/tache_repository_impl.dart';
+import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
+import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
+import 'package:co_habit_frontend/data/services/datasources/remote/tache_remote_datasource.dart';
+import 'package:co_habit_frontend/domain/repositories/creer_foyer_repository.dart';
+import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
+import 'package:co_habit_frontend/domain/repositories/tache_repository.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter/foundation.dart';
 
 final getIt = GetIt.instance;
 
 void setUpDependencies() {
-  // Dépendences externes
+  // Dépendances externes
   _registerExternalDependencies();
 
   // Data sources
@@ -26,6 +33,8 @@ void setUpDependencies() {
 }
 
 void _registerExternalDependencies() {
+  getIt.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
+
   getIt.registerLazySingleton<Dio>(() {
     final dio = Dio(BaseOptions(
       baseUrl: AppConstants.baseUrl,
@@ -34,6 +43,8 @@ void _registerExternalDependencies() {
       receiveTimeout: const Duration(milliseconds: AppConstants.apiTimeout),
       sendTimeout: const Duration(milliseconds: AppConstants.apiTimeout),
     ));
+
+    dio.interceptors.add(TokenInterceptor(getIt<FlutterSecureStorage>()));
 
     dio.interceptors.add(LogInterceptor(
       requestBody: true,
@@ -51,7 +62,12 @@ void _registerExternalDependencies() {
 }
 
 void _registerDataSources() {
-  // Foyer remote datasouce
+  // Auth
+  getIt.registerLazySingleton<AuthRemoteDatasource>(
+        () => AuthRemoteDatasource(getIt<Dio>(), getIt<FlutterSecureStorage>()),
+  );
+
+  // Foyer
   getIt.registerLazySingleton<FoyerRemoteDatasource>(
       () => FoyerRemoteDataSourceImpl(dio: getIt()));
 
@@ -68,6 +84,15 @@ void _registerRepositories() {
   // Foyer repository
   getIt.registerLazySingleton<FoyerRepository>(
       () => FoyerRepositoryImpl(remoteDataSource: getIt()));
+  // Auth
+  getIt.registerLazySingleton<AuthRepository>(
+        () => AuthRepositoryImpl(getIt<AuthRemoteDatasource>()),
+  );
+
+  // Foyer
+  getIt.registerLazySingleton<CreerFoyerRepository>(
+        () => CreerFoyerRepositoryImpl(remoteDataSource: getIt()),
+  );
 
   // Tâche repository
   getIt.registerLazySingleton<TacheRepository>(
@@ -79,7 +104,16 @@ void _registerRepositories() {
 }
 
 void _registerUseCases() {
-  // Foyer use cases
+  // Auth
+  getIt.registerFactory<LoginUseCase>(
+        () => LoginUseCase(getIt<AuthRepository>()),
+  );
+
+  getIt.registerFactory<SignupUseCase>(
+      () => SignupUseCase(getIt<AuthRepository>()),
+  );
+
+  // Foyer
   getIt.registerLazySingleton(() => CreerFoyerUseCase(getIt()));
   getIt.registerLazySingleton(() => GetFoyerByCodeUc(foyerRepository: getIt()));
 
@@ -90,4 +124,8 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => GetAllStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => CreerStockUc(stockRepository: getIt()));
+}
+
+void resetDependencies() {
+  getIt.reset();
 }
