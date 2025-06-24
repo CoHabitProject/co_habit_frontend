@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,6 +14,8 @@ class ScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: AppTheme.backgroundColor,
     );
   }
 

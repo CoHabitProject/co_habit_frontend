@@ -89,4 +89,5 @@ void _registerUseCases() {
   // Stock use cases
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => GetAllStockUc(stockRepository: getIt()));
+  getIt.registerLazySingleton(() => CreerStockUc(stockRepository: getIt()));
 }

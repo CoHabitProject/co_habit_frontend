@@ -19,7 +19,7 @@ abstract class StockEntity {
       required this.maxCapacity});
 
   int get totalItems => items.length;
-  int get itemCount => items.map((e) => e.quantity).reduce((a, b) => a + b);
+  int get itemCount => items.fold(0, (sum, e) => sum + e.quantity);
   double get itemCountPercentage {
     if (maxCapacity == 0) return 0.0;
     return (itemCount / maxCapacity).clamp(0.0, 1.0);

@@ -5,4 +5,5 @@ abstract class StockRepository {
   Future<List<StockEntity>> getLowestStock();
   Future<List<StockEntity>> getAllStock();
   Future<StockEntity> updateStock(StockModel stock);
+  Future<StockEntity> save(StockModel stock);
 }

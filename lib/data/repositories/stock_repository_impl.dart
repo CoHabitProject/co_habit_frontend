@@ -113,4 +113,15 @@ class StockRepositoryImpl implements StockRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<StockEntity> save(StockModel stock) async {
+    try {
+      // return stockRemoteDatasource.save(stock);
+      return stock;
+    } catch (e) {
+      stderr.write('Repository Error on save: $e');
+      rethrow;
+    }
+  }
 }

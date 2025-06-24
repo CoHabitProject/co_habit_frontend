@@ -7,6 +7,7 @@ abstract class StockRemoteDatasource {
   Future<List<StockModel>> getLowestStock();
   Future<List<StockModel>> getAllStock();
   Future<StockModel> updateStock(StockModel stock);
+  Future<StockModel> save(StockModel stock);
 }
 
 class StockRemoteDatasourceImpl implements StockRemoteDatasource {
@@ -58,6 +59,23 @@ class StockRemoteDatasourceImpl implements StockRemoteDatasource {
       throw Exception('Error on updateStock, pas possbile de update');
     } catch (e) {
       stderr.write('API errror on updateStock: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<StockModel> save(StockModel stock) async {
+    try {
+      final response = await dio.post('/stock/save', data: stock);
+      final json = response.data;
+
+      if (response.statusCode == 200) {
+        return StockModel.fromJson(json);
+      }
+      throw Exception(
+          'Error on save, requête en erreur : ${response.statusCode}');
+    } catch (e) {
+      stderr.write('API error on save: $e');
       rethrow;
     }
   }

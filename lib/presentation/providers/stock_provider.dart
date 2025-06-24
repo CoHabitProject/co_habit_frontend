@@ -69,4 +69,9 @@ class StockProvider with ChangeNotifier {
     _stock[stockIndex] = stock.copyWith(items: items);
     notifyListeners();
   }
+
+  void addStock(StockModel stock) {
+    _stock.add(stock);
+    notifyListeners();
+  }
 }

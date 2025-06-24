@@ -36,7 +36,7 @@ class _MaColocScreenState extends State<MaColocScreen> {
                 style: TextStyle(color: Colors.blue)),
             onTap: () {
               Navigator.pop(context);
-              print('Ajouter type de stock');
+              context.push('/creerStock');
             },
           ),
         ]);
@@ -47,7 +47,10 @@ class _MaColocScreenState extends State<MaColocScreen> {
   @override
   void initState() {
     super.initState();
-    _loadStock();
+    final stock = context.read<StockProvider>().stock;
+    if (stock.isEmpty) {
+      _loadStock();
+    }
     _loadFoyer();
   }
 

@@ -1,4 +1,3 @@
-import 'package:co_habit_frontend/presentation/screens/maColoc/stock_detail_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/screens.dart';
 import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
@@ -45,6 +44,10 @@ final appRouter = GoRouter(
       GoRoute(
         path: '/creerFoyer',
         builder: (context, state) => const CreerFoyerScreen(),
+      ),
+      GoRoute(
+        path: '/creerStock',
+        builder: (context, state) => const AjoutStockScreen(),
       ),
       // Routes avec navbar commune via ShellRoute
       ShellRoute(
