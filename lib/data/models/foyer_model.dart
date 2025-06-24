@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/data/models/utilisateur_model.dart';
 import 'package:co_habit_frontend/domain/entities/foyer_entity.dart';
 
 class FoyerModel extends FoyerEntity {
@@ -14,15 +15,18 @@ class FoyerModel extends FoyerEntity {
 
   factory FoyerModel.fromJson(Map<String, dynamic> json) {
     return FoyerModel(
-        id: json['id'],
-        name: json['name'] ?? '',
-        ville: json['ville'] ?? '',
-        adresse: json['adresse'] ?? '',
-        codePostal: json['codePostal'] ?? '',
-        nbPersonnes: json['nbPersonnes'] ?? '',
-        dateEntree: json['dateEntree'] ?? '',
-        code: json['code'] ?? '12345',
-        membres: json['membres']);
+      id: json['id'],
+      name: json['name'] ?? '',
+      ville: json['city'] ?? '',
+      adresse: json['adress'] ?? '',
+      codePostal: json['postalCode'] ?? '',
+      nbPersonnes: json['numberOfPeople'] ?? 0,
+      dateEntree: json['dateEntree'] ?? '',
+      code: json['code'] ?? '12345',
+      membres: (json['users'] as List)
+          .map((e) => UtilisateurModel.fromJson(e))
+          .toList(),
+    );
   }
 
   factory FoyerModel.fromEntity(FoyerEntity entity) {

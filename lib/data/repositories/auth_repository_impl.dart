@@ -1,32 +1,60 @@
+import 'package:co_habit_frontend/core/services/services.dart';
+import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/auth_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
-import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
 import 'package:co_habit_frontend/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource datasource;
+  final TokenService tokenService;
+  final CurrentUserService currentUserService;
 
-  AuthRepositoryImpl(this.datasource);
+  AuthRepositoryImpl(
+      {required this.datasource,
+      required this.tokenService,
+      required this.currentUserService});
 
   @override
-  Future<bool> login(UserCredentials credentials){
-    return datasource.login(credentials);
+  Future<bool> login(String username, String password) async {
+    final request = LoginRequest(username: username, password: password);
+    final credentials = await datasource.login(request);
+
+    if (credentials == null) return false;
+
+    await tokenService.saveCredentials(credentials);
+    await currentUserService.saveUser(credentials.user);
+    return true;
   }
 
-  Future<bool> signup(RegisterData data){
+  @override
+  Future<bool> signup(RegisterData data) {
     return datasource.signup(data);
   }
 
-  Future<void> logout(){
-    return datasource.logout();
+  @override
+  Future<void> logout() async {
+    await tokenService.clearCredentials();
+    await currentUserService.clearUser();
   }
 
-  Future<String?> getToken(){
-    //return datasource.storage.read(key:'jwt');
-    return datasource.getToken();
+  @override
+  Future<bool> refreshToken() async {
+    final oldCredentials = await tokenService.getCredentials();
+    // Verification si oldCredentials existent
+    if (oldCredentials == null) return false;
+
+    final refreshed =
+        await datasource.refreshToken(oldCredentials.refreshToken);
+    // on verifie qu'on as pas rétourné null
+    if (refreshed == null) return false;
+
+    await tokenService.saveCredentials(refreshed);
+    await currentUserService.saveUser(refreshed.user);
+    return true;
   }
 
-  Future<bool> refreshToken(){
-    return datasource.refreshToken();
+  @override
+  Future<UtilisateurModel?> getCurrentUser() async {
+    return await currentUserService.getUser();
   }
 }

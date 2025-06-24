@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:co_habit_frontend/config/router/app_router.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
+import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
@@ -16,7 +17,14 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => FloatingNavbarController()),
         ChangeNotifierProvider(
-            create: (_) => StockProvider(stockRepository: getIt()))
+            create: (_) => StockProvider(stockRepository: getIt())),
+        ChangeNotifierProvider(
+          create: (_) {
+            final provider = getIt<AuthProvider>();
+            Future.microtask(() => provider.initAuth()); // init différé
+            return provider;
+          },
+        ),
       ],
       child: const MyApp(),
     ),
@@ -33,7 +41,8 @@ const String issuer =
     'http://localhost:8088/realms/co-habit'; // http://localhost:8088/realms/co-habit
 const List<String> scopes = ['openid', 'profile', 'email'];
 // à la place de 10.0.2.2:
-const String apiBaseUrl = "http://localhost:8080"; // pour accéder à l'hôte depuis l'émulateur Android
+const String apiBaseUrl =
+    "http://localhost:8080"; // pour accéder à l'hôte depuis l'émulateur Android
 
 String? _accessToken;
 

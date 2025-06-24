@@ -6,7 +6,7 @@ class CreerFoyerUseCase {
 
   CreerFoyerUseCase(this.repository);
 
-  Future<bool> execute(FoyerEntity formData) async {
+  Future<FoyerEntity> execute(FoyerEntity formData) async {
     return await repository.creerFoyer(formData);
   }
 }
