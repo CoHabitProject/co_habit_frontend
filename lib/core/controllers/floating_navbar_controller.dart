@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class FloatingNavbarController extends ChangeNotifier {
   VoidCallback? _onPressed;
   bool _visible = true;
-  Map<String, VoidCallback> _routeActions = {};
+  final Map<String, VoidCallback> _routeActions = {};
 
   VoidCallback? get onPressed => _onPressed;
   bool get visible => _visible;
