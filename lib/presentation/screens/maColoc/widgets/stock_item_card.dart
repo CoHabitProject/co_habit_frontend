@@ -5,12 +5,14 @@ class StockItemCard extends StatelessWidget {
   final StockItemModel item;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
+  final bool isFull;
 
   const StockItemCard(
       {super.key,
       required this.item,
       required this.onIncrement,
-      required this.onDecrement});
+      required this.onDecrement,
+      required this.isFull});
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +56,11 @@ class StockItemCard extends StatelessWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
                 IconButton(
-                    onPressed: onIncrement,
-                    icon: const Icon(Icons.add_circle_outline)),
+                  onPressed: isFull ? null : onIncrement,
+                  icon: const Icon(Icons.add_circle_outline),
+                  color: isFull ? Colors.transparent : null,
+                  disabledColor: Colors.transparent,
+                ),
               ],
             )
           ],

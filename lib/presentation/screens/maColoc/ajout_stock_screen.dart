@@ -76,7 +76,6 @@ class _AjoutStockScreenState extends State<AjoutStockScreen> {
         Navigator.pop(context);
       }
     } catch (e) {
-      print(e);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Erreur dans la sauvegarde'),

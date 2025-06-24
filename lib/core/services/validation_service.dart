@@ -34,4 +34,24 @@ class ValidationService {
 
     return null;
   }
+
+  static String? validateMaxCapacity(
+      String? value, String fieldName, int maxCapacity) {
+    if (value == null || value.isEmpty) {
+      return 'Veuillez entrer $fieldName';
+    }
+
+    int? intValue;
+    try {
+      intValue = int.parse(value);
+    } catch (e) {
+      return 'Veuillez entrer un nombre entier valide';
+    }
+
+    if (intValue > maxCapacity) {
+      return 'La valeur maximale est $maxCapacity';
+    }
+
+    return null;
+  }
 }
