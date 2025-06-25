@@ -1,28 +1,57 @@
+import 'package:co_habit_frontend/core/services/services.dart';
+import 'package:co_habit_frontend/domain/repositories/auth_repository.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenInterceptor extends Interceptor {
-  final FlutterSecureStorage storage;
+  final TokenService tokenService;
+  final AuthRepository authRepository;
 
-  //Liste des endpoints publics
-  final publicEndpoints = ['/auth/register','/auth/register','/public'];
-
-  TokenInterceptor(this.storage);
+  TokenInterceptor({required this.tokenService, required this.authRepository});
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await storage.read(key: 'jwt');
-    final isPublic = publicEndpoints.any((url)=>options.path.contains(url));
+  void onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    final token = await tokenService.getAccessToken();
 
-    // On ajoute le token à la requête uniquement si on cherche à joindre un endpoint public
-    // sinon on se prend une 401
-    if(token!=null && !isPublic){
-      options.headers['Authorization']='Bearer $token';
-      // print('>>> TOKEN AJOUTE AU HEADER : $token');
+    // Vérification du token
+    if (token != null && token.isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $token';
     }
-    //else {
-    //  print('>>> AUCUN TOKEN TROUVE');
-    //}
-    return handler.next(options);
+
+    handler.next(options);
+  }
+
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    final isUnauthorized = err.response?.statusCode == 401;
+
+    if (isUnauthorized) {
+      final refreshed = await authRepository.refreshToken();
+
+      if (refreshed) {
+        final newToken = await tokenService.getAccessToken();
+
+        final clone = await _retry(err.requestOptions, newToken!);
+        return handler.resolve(clone);
+      }
+    }
+
+    return handler.next(err);
+  }
+
+  Future<Response<dynamic>> _retry(
+      RequestOptions requestOptions, String token) async {
+    final options = Options(
+      method: requestOptions.method,
+      headers: requestOptions.headers..['Authorization'] = 'Bearer $token',
+    );
+
+    final dio = Dio();
+    return dio.request(
+      requestOptions.path,
+      data: requestOptions.data,
+      queryParameters: requestOptions.queryParameters,
+      options: options,
+    );
   }
 }

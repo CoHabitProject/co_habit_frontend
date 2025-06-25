@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 final appRouter = GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/',
     redirect: (context, state) async {
       final isOnboardingComplete =
           await OnboardingService.isOnboardingComplete();
@@ -55,6 +55,10 @@ final appRouter = GoRouter(
       GoRoute(
         path: '/creerStock',
         builder: (context, state) => const AjoutStockScreen(),
+      ),
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const SplashScreen(),
       ),
       // Routes avec navbar commune via ShellRoute
       ShellRoute(

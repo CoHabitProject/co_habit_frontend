@@ -1,100 +1,119 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
+import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
-import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthRemoteDatasource {
+abstract class AuthRemoteDatasource {
+  Future<UserCredentials?> login(LoginRequest request);
+  Future<UserCredentials?> refreshToken(String oldRefreshToken);
+  Future<bool> signup(RegisterData data);
+  Future<UtilisateurModel?> fetchCurrentUser(String accessToken);
+}
+
+class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final Dio dio;
-  final FlutterSecureStorage storage;
 
-  AuthRemoteDatasource(this.dio,this.storage);
+  AuthRemoteDatasourceImpl({required this.dio});
 
-  Future<bool> login(UserCredentials credentials)async{
+  @override
+  Future<UserCredentials?> login(LoginRequest request) async {
     try {
-      final response = await dio.post(
-        AppConstants.login,
-        data: jsonEncode(credentials.toJson()),
-      );
+      final response = await dio.post(AppConstants.login,
+          data: jsonEncode(request.toJson()));
 
-      if(response.statusCode == 200 && response.data != null) {
-        final tokens=response.data;
-        await storage.write(key:'jwt',value:tokens['access_token']);
-        // POUR DEBUG
-        // final savedToken = await storage.read(key:'jwt');
-        // print('>>> TOKEN ENREGISTRE : $savedToken');
-        await storage.write(key:'refreshToken',value:tokens['refresh_token']);
-        return true;
+      stderr.write('[Datasource] login → status: ${response.statusCode}');
+      stderr.write('[Datasource] login → response: ${response.data}');
+
+      if (response.statusCode == 200 && response.data != null) {
+        final tokens = response.data;
+
+        final accessToken = tokens['access_token'];
+        final refreshToken = tokens['refresh_token'];
+        final expiresIn = tokens['expires_in'];
+
+        final user = await fetchCurrentUser(accessToken);
+        if (user == null) return null;
+
+        final expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
+
+        return UserCredentials(
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            tokenExpiry: expiryDate,
+            user: user);
       }
-    }catch(e){
-      print('login errror : $e');
-    }
-    return false;
-  }
-
-  Future<bool> signup(RegisterData data) async {
-    try {
-      final response = await dio.post(
-        AppConstants.register,
-        data: jsonEncode(data.toJson())
-      );
-
-      if(response.statusCode == 201) {
-        return true;
-      }
-    } catch(e) {
-      print('Signup error : $e');
-    }
-    return false;
-  }
-
-  Future<bool> refreshToken() async {
-    try {
-      final refreshToken = await storage.read(key: 'refreshToken');
-      if(refreshToken==null)return false;
-      final response=await dio.post(
-          AppConstants.refresh,
-          data: jsonEncode({'refreshToken': refreshToken})
-      );
-      if(response.statusCode==200){
-        final tokens=response.data;
-        await storage.write(key: 'jwt',value:tokens['access_token']);
-        return true;
-      }
-    }catch(e){
-      print('Refresh token error $e');
-    }
-    return false;
-  }
-
-  Future<void> logout() async {
-    await storage.delete(key: 'jwt');
-    await storage.delete(key: 'refreshToken');
-  }
-
-  Future<String?> getToken() async {
-    return await storage.read(key: 'jwt');
-  }
-
-  Future<Map<String, dynamic>?> getUserStatus() async {
-    try {
-      final response=await dio.get(AppConstants.userStatus);
-      if(response.statusCode==200){
-        return response.data;
-      }
-    }catch(e){
-      print('Get user status error : $e');
+    } catch (e) {
+      stderr.write('API error on login: $e');
     }
     return null;
   }
 
-  Map<String, dynamic> parseJwt(String token) {
-    final parts = token.split('.');
-    if(parts.length != 3) {
-      throw Exception('Invalid token');
+  @override
+  Future<UserCredentials?> refreshToken(String oldRefreshToken) async {
+    try {
+      final response = await dio.post(AppConstants.refresh,
+          data: jsonEncode({'refreshToken': oldRefreshToken}));
+
+      if (response.statusCode == 200 && response.data != null) {
+        final tokens = response.data;
+
+        final accessToken = tokens['access_token'];
+        final refreshToken = tokens['refresh_token'];
+        final expiresIn = tokens['expires_in'];
+
+        final user = await fetchCurrentUser(accessToken);
+        if (user == null) return null;
+
+        final expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
+
+        return UserCredentials(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          tokenExpiry: expiryDate,
+          user: user,
+        );
+      }
+    } catch (e) {
+      stderr.write('API error on refreshToken: $e');
     }
-    final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
-    return json.decode(payload);
+    return null;
+  }
+
+  @override
+  Future<UtilisateurModel?> fetchCurrentUser(String accessToken) async {
+    try {
+      final response = await dio.get(
+        AppConstants.userStatus,
+        options: Options(
+          headers: {'Authorization': 'Bearer $accessToken'},
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        return UtilisateurModel.fromJson(response.data);
+      }
+    } catch (e) {
+      stderr.write('API error on fetchCurrentUser: $e');
+    }
+    return null;
+  }
+
+  @override
+  Future<bool> signup(RegisterData data) async {
+    try {
+      final response = await dio.post(
+        AppConstants.register,
+        data: jsonEncode(data.toJson()),
+      );
+
+      return response.statusCode == 201;
+    } catch (e) {
+      stderr.write('Signup error: $e');
+      return false;
+    }
   }
 }

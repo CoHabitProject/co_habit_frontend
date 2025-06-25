@@ -95,7 +95,7 @@ class _BuildLogoSection extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: Image.asset(
-        'assets/onboarding/logo_white.png',
+        'assets/images/onboarding/logo_white.png',
         width: 270,
         height: 300,
       ),

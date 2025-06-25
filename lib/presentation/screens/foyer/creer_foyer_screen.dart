@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
@@ -5,6 +7,7 @@ import 'package:co_habit_frontend/data/models/foyer_model.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
+import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -76,21 +79,6 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
         membres: []);
   }
 
-  void _handleSubmissionResult(bool result) {
-    if (result) {
-      _showSuccessMessage('Foyer créé avec succès');
-    } else {
-      _showErrorMessage('Echec de la création du foyer');
-    }
-  }
-
-  void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: Colors.green,
-    ));
-  }
-
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
@@ -109,7 +97,8 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
       final result = await useCase.execute(formData);
 
       if (mounted) {
-        _handleSubmissionResult(result);
+        // sauvegarde dans provider TODO : supprimmer
+        stderr.write(result);
       }
     } catch (e) {
       if (mounted) {
@@ -135,27 +124,16 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Création du foyer',
-          style: TextStyle(fontSize: 25),
-        ),
-        scrolledUnderElevation: 0,
-        backgroundColor: AppTheme.backgroundColor,
-      ),
+      backgroundColor: AppTheme.backgroundColor,
+      appBar: const ScreenAppBar(title: 'Création du foyer'),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(50, 30, 50, 10),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // const Text(
-                //   'Création du foyer',
-                //   style: TextStyle(fontSize: 40),
-                // ),
-                // const SizedBox(height: 50),
                 _buildFormFields(),
                 const SizedBox(height: 30),
                 CohabitButton(
@@ -202,14 +180,6 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
           validator: (value) =>
               ValidationService.validateCodePostalField(value),
           inputType: TextInputType.number,
-        ),
-        CustomFormField(
-          controller: _nbPersonnesController,
-          label: 'Nombre de personnes',
-          inputType: TextInputType.number,
-          hintText: 'Numéro de personnes dans le foyer',
-          validator: (value) => ValidationService.validatePositiveNumbers(
-              value, 'le nombre de personnes'),
         ),
         _buildDateField()
       ],

@@ -2,22 +2,13 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
-import 'package:co_habit_frontend/data/repositories/auth_repository_impl.dart';
-import 'package:co_habit_frontend/data/repositories/foyer_repository_impl.dart';
-import 'package:co_habit_frontend/data/repositories/stock_repository_impl.dart';
-import 'package:co_habit_frontend/data/repositories/tache_repository_impl.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/auth_remote_datasource.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/tache_remote_datasource.dart';
+import 'package:co_habit_frontend/core/services/services.dart';
+import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
+import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
-import 'package:co_habit_frontend/domain/repositories/auth_repository.dart';
-import 'package:co_habit_frontend/domain/repositories/foyer_repository.dart';
-import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
-import 'package:co_habit_frontend/domain/repositories/tache_repository.dart';
-import 'package:co_habit_frontend/domain/usecases/auth/login_usecase.dart';
-import 'package:co_habit_frontend/domain/usecases/auth/signup_usecase.dart';
+import 'package:co_habit_frontend/domain/repositories/repositories.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
+import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -25,21 +16,21 @@ import 'package:get_it/get_it.dart';
 final getIt = GetIt.instance;
 
 void setUpDependencies() {
-  // Dépendances externes
-  _registerExternalDependencies();
-
-  // Data sources
+  _registerExternalServices();
+  _registerServices();
   _registerDataSources();
-
-  // Repositories
   _registerRepositories();
-
-  // Use cases
+  _registerProviders();
   _registerUseCases();
+
+  // 👉 Ajout de l’intercepteur après enregistrement complet
+  getIt<Dio>().interceptors.add(getIt<TokenInterceptor>());
 }
 
-void _registerExternalDependencies() {
-  getIt.registerLazySingleton<FlutterSecureStorage>(() => const FlutterSecureStorage());
+void _registerExternalServices() {
+  getIt.registerLazySingleton<FlutterSecureStorage>(
+    () => const FlutterSecureStorage(),
+  );
 
   getIt.registerLazySingleton<Dio>(() {
     final dio = Dio(BaseOptions(
@@ -49,8 +40,6 @@ void _registerExternalDependencies() {
       receiveTimeout: const Duration(milliseconds: AppConstants.apiTimeout),
       sendTimeout: const Duration(milliseconds: AppConstants.apiTimeout),
     ));
-
-    dio.interceptors.add(TokenInterceptor(getIt<FlutterSecureStorage>()));
 
     dio.interceptors.add(LogInterceptor(
       requestBody: true,
@@ -63,70 +52,76 @@ void _registerExternalDependencies() {
 
     return dio;
   });
+}
 
+void _registerServices() {
+  getIt.registerLazySingleton(() => TokenService());
+  getIt.registerLazySingleton(() => CurrentUserService());
   getIt.registerLazySingleton(() => FloatingNavbarController());
 }
 
 void _registerDataSources() {
-  // Auth
   getIt.registerLazySingleton<AuthRemoteDatasource>(
-        () => AuthRemoteDatasource(getIt<Dio>(), getIt<FlutterSecureStorage>()),
+    () => AuthRemoteDatasourceImpl(dio: getIt()),
   );
 
-  // Foyer
   getIt.registerLazySingleton<FoyerRemoteDatasource>(
-      () => FoyerRemoteDataSourceImpl(dio: getIt()));
+    () => FoyerRemoteDataSourceImpl(dio: getIt()),
+  );
 
-  // Tâche remote datasource
   getIt.registerLazySingleton<TacheRemoteDatasource>(
-      () => TacheRemoteDatasourceImpl(dio: getIt()));
+    () => TacheRemoteDatasourceImpl(dio: getIt()),
+  );
 
-  // Stock remote datasource
   getIt.registerLazySingleton<StockRemoteDatasource>(
-      () => StockRemoteDatasourceImpl(dio: getIt()));
+    () => StockRemoteDatasourceImpl(dio: getIt()),
+  );
 }
 
 void _registerRepositories() {
-  // Foyer repository
+  getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
+        datasource: getIt<AuthRemoteDatasource>(),
+        tokenService: getIt<TokenService>(),
+        currentUserService: getIt<CurrentUserService>(),
+      ));
+
   getIt.registerLazySingleton<FoyerRepository>(
-      () => FoyerRepositoryImpl(remoteDataSource: getIt()));
-  // Auth
-  getIt.registerLazySingleton<AuthRepository>(
-        () => AuthRepositoryImpl(getIt<AuthRemoteDatasource>()),
+    () => FoyerRepositoryImpl(remoteDataSource: getIt()),
   );
 
-  // Foyer
-  // getIt.registerLazySingleton<CreerFoyerRepository>(
-  //       () => CreerFoyerRepositoryImpl(remoteDataSource: getIt()),
-  // );
-
-  // Tâche repository
   getIt.registerLazySingleton<TacheRepository>(
-      () => TacheRepositoryImpl(tacheRemoteDatasource: getIt()));
+    () => TacheRepositoryImpl(tacheRemoteDatasource: getIt()),
+  );
 
-  // Stock repository
   getIt.registerLazySingleton<StockRepository>(
-      () => StockRepositoryImpl(stockRemoteDatasource: getIt()));
+    () => StockRepositoryImpl(stockRemoteDatasource: getIt()),
+  );
+}
+
+void _registerProviders() {
+  getIt.registerLazySingleton(() => AuthProvider(
+        authRepository: getIt<AuthRepository>(),
+        tokenService: getIt<TokenService>(),
+        currentUserService: getIt<CurrentUserService>(),
+      ));
+
+  getIt.registerLazySingleton(() => TokenInterceptor(
+        tokenService: getIt<TokenService>(),
+        authRepository: getIt<AuthRepository>(),
+      ));
 }
 
 void _registerUseCases() {
-  // Auth
-  getIt.registerFactory<LoginUseCase>(
-        () => LoginUseCase(getIt<AuthRepository>()),
-  );
-
-  getIt.registerFactory<SignupUseCase>(
-      () => SignupUseCase(getIt<AuthRepository>()),
-  );
+  getIt.registerFactory(() => SignupUseCase(getIt<AuthRepository>()));
 
   // Foyer
   getIt.registerLazySingleton(() => CreerFoyerUseCase(getIt()));
   getIt.registerLazySingleton(() => GetFoyerByCodeUc(foyerRepository: getIt()));
 
-  // Tâche use cases
+  // Tâches
   getIt.registerLazySingleton(() => GetLastCreatedTachesUc(getIt()));
 
-  // Stock use cases
+  // Stock
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => GetAllStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => CreerStockUc(stockRepository: getIt()));

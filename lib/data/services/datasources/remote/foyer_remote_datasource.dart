@@ -4,7 +4,7 @@ import 'package:co_habit_frontend/data/models/foyer_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class FoyerRemoteDatasource {
-  Future<bool> creerFoyer(FoyerModel formData);
+  Future<FoyerModel> creerFoyer(FoyerModel formData);
   Future<FoyerModel> getFoyerByCode(String code);
 }
 
@@ -14,13 +14,17 @@ class FoyerRemoteDataSourceImpl implements FoyerRemoteDatasource {
   FoyerRemoteDataSourceImpl({required this.dio});
 
   @override
-  Future<bool> creerFoyer(FoyerModel formData) async {
+  Future<FoyerModel> creerFoyer(FoyerModel formData) async {
     try {
       final response = await dio.post('/foyer/creer', data: formData.toJson());
-      return response.statusCode == 200 || response.statusCode == 201;
+      if (response.statusCode == 200 || response.statusCode == 2001) {
+        return FoyerModel.fromJson(response.data);
+      }
+      throw Exception(
+          'Erreur lors dans la réponse de la création du foyer avec le code ${response.statusCode}');
     } catch (e) {
       stderr.write('API Error on creerFoyer: $e');
-      return false;
+      rethrow;
     }
   }
 

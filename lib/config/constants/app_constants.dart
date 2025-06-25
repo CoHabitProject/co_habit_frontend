@@ -8,7 +8,7 @@ class AppConstants {
   static const String login = '$auth/login';
   static const String register = '$auth/register';
   static const String refresh = '$auth/refresh';
-  static const String userStatus = '/interne/status';
+  static const String userStatus = '/interne/profile';
 
   // Default headers
   static const Map<String, String> defaultHeaders = {
