@@ -25,8 +25,8 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       final response = await dio.post(AppConstants.login,
           data: jsonEncode(request.toJson()));
 
-      print('[Datasource] login → status: ${response.statusCode}');
-      print('[Datasource] login → response: ${response.data}');
+      stderr.write('[Datasource] login → status: ${response.statusCode}');
+      stderr.write('[Datasource] login → response: ${response.data}');
 
       if (response.statusCode == 200 && response.data != null) {
         final tokens = response.data;
@@ -36,7 +36,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
         final expiresIn = tokens['expires_in'];
 
         final user = await fetchCurrentUser(accessToken);
-        print('[Datasource] fetchCurrentUser → $user');
         if (user == null) return null;
 
         final expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
@@ -93,9 +92,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
           headers: {'Authorization': 'Bearer $accessToken'},
         ),
       );
-
-      print('[Datasource] fetchCurrentUser → status: ${response.statusCode}');
-      print('[Datasource] fetchCurrentUser → body: ${response.data}');
 
       if (response.statusCode == 200 && response.data != null) {
         return UtilisateurModel.fromJson(response.data);

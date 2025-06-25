@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
@@ -95,7 +97,8 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
       final result = await useCase.execute(formData);
 
       if (mounted) {
-        // sauvegarde dans provider
+        // sauvegarde dans provider TODO : supprimmer
+        stderr.write(result);
       }
     } catch (e) {
       if (mounted) {

@@ -25,16 +25,16 @@ class _LoginScreenState extends State<LoginScreen> {
       _passwordController.text.trim(),
     );
 
-    print('Login success: $success');
-
     setState(() => _isLoading = false);
 
-    if (success) {
-      context.go('/choixInitial');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('La connexion a échoué')),
-      );
+    if (mounted) {
+      if (success) {
+        context.go('/choixInitial');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('La connexion a échoué')),
+        );
+      }
     }
   }
 
