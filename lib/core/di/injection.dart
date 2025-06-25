@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
+import 'package:co_habit_frontend/core/services/iml/log_service_impl.dart';
 import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
@@ -58,15 +59,16 @@ void _registerServices() {
   getIt.registerLazySingleton(() => TokenService());
   getIt.registerLazySingleton(() => CurrentUserService());
   getIt.registerLazySingleton(() => FloatingNavbarController());
+  getIt.registerLazySingleton<LogService>(() => LogServiceImpl());
 }
 
 void _registerDataSources() {
   getIt.registerLazySingleton<AuthRemoteDatasource>(
-    () => AuthRemoteDatasourceImpl(dio: getIt()),
+    () => AuthRemoteDatasourceImpl(dio: getIt(), log: getIt<LogService>()),
   );
 
   getIt.registerLazySingleton<FoyerRemoteDatasource>(
-    () => FoyerRemoteDataSourceImpl(dio: getIt()),
+    () => FoyerRemoteDataSourceImpl(dio: getIt(), log: getIt<LogService>()),
   );
 
   getIt.registerLazySingleton<TacheRemoteDatasource>(
@@ -80,10 +82,10 @@ void _registerDataSources() {
 
 void _registerRepositories() {
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
-        datasource: getIt<AuthRemoteDatasource>(),
-        tokenService: getIt<TokenService>(),
-        currentUserService: getIt<CurrentUserService>(),
-      ));
+      datasource: getIt<AuthRemoteDatasource>(),
+      tokenService: getIt<TokenService>(),
+      currentUserService: getIt<CurrentUserService>(),
+      log: getIt<LogService>()));
 
   getIt.registerLazySingleton<FoyerRepository>(
     () => FoyerRepositoryImpl(remoteDataSource: getIt()),
@@ -106,9 +108,9 @@ void _registerProviders() {
       ));
 
   getIt.registerLazySingleton(() => TokenInterceptor(
-        tokenService: getIt<TokenService>(),
-        authRepository: getIt<AuthRepository>(),
-      ));
+      tokenService: getIt<TokenService>(),
+      authRepository: getIt<AuthRepository>(),
+      log: getIt<LogService>()));
 }
 
 void _registerUseCases() {

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:co_habit_frontend/data/models/foyer_model.dart';
+import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/foyer_entity.dart';
 import 'package:co_habit_frontend/domain/repositories/foyer_repository.dart';
@@ -10,12 +11,11 @@ class FoyerRepositoryImpl implements FoyerRepository {
   FoyerRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<FoyerEntity> creerFoyer(FoyerEntity formData) async {
+  Future<FoyerEntity> creerFoyer(CreerFoyerRequest request) async {
     try {
-      final FoyerModel model = FoyerModel.fromEntity(formData);
-      return await remoteDataSource.creerFoyer(model);
+      return await remoteDataSource.creerFoyer(request);
     } catch (e) {
-      stderr.write('Repository Error: $e');
+      print('Repository Error: $e');
       rethrow;
     }
   }

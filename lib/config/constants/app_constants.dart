@@ -10,6 +10,9 @@ class AppConstants {
   static const String refresh = '$auth/refresh';
   static const String userStatus = '/interne/profile';
 
+  // API foyer routes
+  static const String colocations = '/interne/colocations';
+
   // Default headers
   static const Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',

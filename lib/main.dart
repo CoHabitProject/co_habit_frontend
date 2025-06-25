@@ -9,22 +9,20 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-void main() {
-  // init des dépéndences du projet
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setUpDependencies();
+
+  final authProvider = getIt<AuthProvider>();
+  await authProvider.initAuth();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FloatingNavbarController()),
         ChangeNotifierProvider(
             create: (_) => StockProvider(stockRepository: getIt())),
-        ChangeNotifierProvider(
-          create: (_) {
-            final provider = getIt<AuthProvider>();
-            Future.microtask(() => provider.initAuth()); // init différé
-            return provider;
-          },
-        ),
+        ChangeNotifierProvider(create: (_) => authProvider),
       ],
       child: const MyApp(),
     ),

@@ -8,11 +8,13 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource datasource;
   final TokenService tokenService;
   final CurrentUserService currentUserService;
+  final LogService log;
 
   AuthRepositoryImpl(
       {required this.datasource,
       required this.tokenService,
-      required this.currentUserService});
+      required this.currentUserService,
+      required this.log});
 
   @override
   Future<bool> login(String username, String password) async {
@@ -40,16 +42,18 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<bool> refreshToken() async {
     final oldCredentials = await tokenService.getCredentials();
-    // Verification si oldCredentials existent
     if (oldCredentials == null) return false;
 
-    final refreshed =
+    final newCredentials =
         await datasource.refreshToken(oldCredentials.refreshToken);
-    // on verifie qu'on as pas rétourné null
-    if (refreshed == null) return false;
+    if (newCredentials == null) return false;
 
-    await tokenService.saveCredentials(refreshed);
-    await currentUserService.saveUser(refreshed.user);
+    // Sauvegarder les nouveaux credentials
+    await tokenService.saveCredentials(newCredentials);
+
+    // Mettre à jour le current user
+    await currentUserService.saveUser(newCredentials.user);
+
     return true;
   }
 

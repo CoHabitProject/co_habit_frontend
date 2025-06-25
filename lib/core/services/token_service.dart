@@ -1,10 +1,14 @@
 import 'dart:convert';
 
+import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TokenService {
   static const _credentialsKey = 'user_credentials';
+
+  final _log = GetIt.instance<LogService>();
 
   Future<void> saveCredentials(UserCredentials credentials) async {
     // Récupération de shared preferences et sauvegarde des credentials
