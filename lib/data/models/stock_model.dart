@@ -32,7 +32,6 @@ class StockModel extends StockEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'title': title,
       'color': color,
       'imageAsset': imageAsset,

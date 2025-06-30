@@ -3,6 +3,7 @@ import 'package:co_habit_frontend/config/router/app_router.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/foyer_provider.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
@@ -23,6 +24,7 @@ void main() async {
         ChangeNotifierProvider(
             create: (_) => StockProvider(stockRepository: getIt())),
         ChangeNotifierProvider(create: (_) => authProvider),
+        ChangeNotifierProvider(create: (_) => FoyerProvider())
       ],
       child: const MyApp(),
     ),

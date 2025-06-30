@@ -1,4 +1,5 @@
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 
@@ -41,12 +42,12 @@ class StockProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> persistStockUpdateAndReplace(StockModel updatedStock) async {
-    await stockRepository.updateStock(updatedStock);
-    _stock = [
-      for (final s in _stock)
-        if (s.id == updatedStock.id) updatedStock else s
-    ];
+  Future<void> persistStockUpdateAndReplace(StockRequest request) async {
+    await stockRepository.updateStock(request);
+    // _stock = [
+    //   for (final s in _stock)
+    //     if (s.id == updatedStock.id) updatedStock else s
+    // ];
     notifyListeners();
   }
 

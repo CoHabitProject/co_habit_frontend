@@ -66,13 +66,13 @@ class _AjoutStockScreenState extends State<AjoutStockScreen> {
     try {
       final formData = _buildFormData();
       final useCase = getIt<CreerStockUc>();
-      final result = await useCase.execute(formData);
+      // final result = await useCase.execute(formData);
 
       if (mounted) {
         final stockProvider =
             Provider.of<StockProvider>(context, listen: false);
 
-        stockProvider.addStock(result as StockModel);
+        // stockProvider.addStock(result as StockModel);
         Navigator.pop(context);
       }
     } catch (e) {

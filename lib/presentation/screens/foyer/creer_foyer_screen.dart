@@ -3,10 +3,15 @@ import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
 import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
+import 'package:co_habit_frontend/presentation/providers/foyer_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
+import 'package:co_habit_frontend/presentation/screens/foyer/controller/creer_foyer_controller.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CreerFoyerScreen extends StatefulWidget {
   const CreerFoyerScreen({super.key});
@@ -23,12 +28,18 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
   late final TextEditingController _villeController;
   late final TextEditingController _adresseController;
   late final TextEditingController _codePostalController;
+  late final CreerFoyerController _creerFoyerController;
 
   void _initControllers() {
     _nameController = TextEditingController();
     _villeController = TextEditingController();
     _adresseController = TextEditingController();
     _codePostalController = TextEditingController();
+    _creerFoyerController = CreerFoyerController(
+        creerFoyerUc: getIt<CreerFoyerUseCase>(),
+        creerStockUc: getIt<CreerStockUc>(),
+        foyerProvider: context.read<FoyerProvider>(),
+        stockProvider: context.read<StockProvider>());
   }
 
   void _disposeControllers() {
@@ -75,17 +86,15 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
     }
 
     try {
-      final formData = _buildFormData();
-      final useCase = getIt<CreerFoyerUseCase>();
-      final result = await useCase.execute(formData);
-
+      final request = _buildFormData();
+      await _creerFoyerController.creerFoyerEtStocks(request);
       if (mounted) {
-        // sauvegarde dans provider TODO : supprimmer
-        print(result);
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
-        _showErrorMessage('Une erreur est survenue : $e');
+        _showErrorMessage(
+            '[CreerFoyerScreen] Une erreur est survenue lors de la créatio du foyer : $e');
       }
     }
   }
