@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:dio/dio.dart';
 
 abstract class StockRemoteDatasource {
   Future<List<StockModel>> getLowestStock();
   Future<List<StockModel>> getAllStock();
-  Future<StockModel> updateStock(StockModel stock);
-  Future<StockModel> save(StockModel stock);
+  Future<StockModel> updateStock(StockRequest stock);
+  Future<StockModel> save(StockRequest stock);
 }
 
 class StockRemoteDatasourceImpl implements StockRemoteDatasource {
@@ -48,7 +49,7 @@ class StockRemoteDatasourceImpl implements StockRemoteDatasource {
   }
 
   @override
-  Future<StockModel> updateStock(StockModel stock) async {
+  Future<StockModel> updateStock(StockRequest stock) async {
     try {
       final response = await dio.post('/stock/updateStock', data: stock);
       final json = response.data;
@@ -64,7 +65,7 @@ class StockRemoteDatasourceImpl implements StockRemoteDatasource {
   }
 
   @override
-  Future<StockModel> save(StockModel stock) async {
+  Future<StockModel> save(StockRequest stock) async {
     try {
       final response = await dio.post('/stock/save', data: stock);
       final json = response.data;

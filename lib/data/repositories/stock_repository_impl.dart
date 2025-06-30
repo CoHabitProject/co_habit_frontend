@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
 import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
@@ -57,9 +58,9 @@ class StockRepositoryImpl implements StockRepository {
   }
 
   @override
-  Future<StockEntity> updateStock(StockModel stock) async {
+  Future<StockEntity> updateStock(StockRequest request) async {
     try {
-      return stockRemoteDatasource.updateStock(stock);
+      return stockRemoteDatasource.updateStock(request);
     } catch (e) {
       stderr.write('Repository Error on updateStock : $e');
       rethrow;
@@ -67,10 +68,9 @@ class StockRepositoryImpl implements StockRepository {
   }
 
   @override
-  Future<StockEntity> save(StockModel stock) async {
+  Future<StockEntity> save(StockRequest request) async {
     try {
-      // return stockRemoteDatasource.save(stock);
-      return stock;
+      return stockRemoteDatasource.save(request);
     } catch (e) {
       stderr.write('Repository Error on save: $e');
       rethrow;
