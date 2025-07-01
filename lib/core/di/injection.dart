@@ -10,7 +10,6 @@ import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.d
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
 import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_items_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';

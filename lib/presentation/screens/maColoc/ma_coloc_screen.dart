@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_items_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/controllers/stock_controller.dart';
@@ -77,7 +78,7 @@ class _MaColocScreenState extends State<MaColocScreen> {
         await stockController.loadAllStocksAndItems();
       }
     } catch (e) {
-      print('Error : $e');
+      stderr.write('Error : $e');
     }
   }
 
