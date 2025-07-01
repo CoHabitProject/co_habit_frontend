@@ -29,29 +29,27 @@ class CreerFoyerController {
       StockRequest(
           title: 'Hygiène',
           imageAsset: 'assets/images/stock/soap.png',
-          color: const Color(0xFF369FFF).toString(),
+          color: '0xFF369FFF',
           maxCapacity: 50),
       StockRequest(
           title: 'Entretien',
           imageAsset: 'assets/images/stock/soap.png',
-          color: const Color(0xFFFF993A).toString(),
+          color: '0xFFFF993A',
           maxCapacity: 50),
       StockRequest(
           title: 'Courses',
           imageAsset: 'assets/images/stock/soap.png',
-          color: const Color(0xFF8AC53E).toString(),
+          color: '0xFF8AC53E',
           maxCapacity: 100),
     ];
 
     // Création + récupération des models
-    final List<StockModel> createdStocks = [];
-    for (final req in defaultStockRequests) {
-      final stock = await creerStockUc.execute(req);
-      if (stock is StockModel) {
-        createdStocks.add(stock);
-      }
-    }
-
+    final createdStocks = await Future.wait(
+      defaultStockRequests.map((stock) async {
+        final entity = await creerStockUc.execute(stock, foyer.id);
+        return StockModel.fromEntity(entity);
+      }),
+    );
     stockProvider.setStock(createdStocks);
   }
 }

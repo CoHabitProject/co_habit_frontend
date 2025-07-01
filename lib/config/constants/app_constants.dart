@@ -13,6 +13,14 @@ class AppConstants {
   // API foyer routes
   static const String colocations = '/interne/colocations';
 
+  // API Stock routes
+  static String creerStockRoute(int colocationId) =>
+      '/interne/colocations/$colocationId/stocks';
+
+  // Keycloak Auth
+  static const String clientId = 'co-habit-confidential';
+  static const String clientSecret = 'secret';
+
   // Default headers
   static const Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',

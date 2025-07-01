@@ -47,28 +47,29 @@ class TokenInterceptor extends Interceptor {
     final isUnauthorized = err.response?.statusCode == 401;
 
     if (isUnauthorized) {
-      log.warn('[TokenInterceptor] 401 detected – trying to refresh token...');
+      log.warn('[TokenInterceptor] 401 detected – attempting token refresh...');
 
-      final refreshed = await authRepository.refreshToken();
+      try {
+        final credentials = await authRepository.refreshToken();
 
-      if (refreshed) {
-        log.info('[TokenInterceptor] Token refreshed successfully.');
+        if (credentials != null && credentials.accessToken.isNotEmpty) {
+          log.info('[TokenInterceptor] Token refreshed successfully.');
 
-        final newToken = await tokenService.getAccessToken();
-        if (newToken != null) {
-          final clone = await _retry(err.requestOptions, newToken);
+          final clone =
+              await _retry(err.requestOptions, credentials.accessToken);
           log.debug(
               '[TokenInterceptor] Retrying original request with new token.');
           return handler.resolve(clone);
         } else {
           log.error(
-              '[TokenInterceptor] Token was refreshed but not retrievable.');
+              '[TokenInterceptor] Token was refreshed but credentials are invalid.');
         }
-      } else {
-        log.error('[TokenInterceptor] Token refresh failed.');
+      } catch (e, stack) {
+        log.error('[TokenInterceptor] Error during token refresh: $e',
+            stackTrace: stack);
       }
     } else {
-      log.warn('[TokenInterceptor] Non-401 error: ${err.message}');
+      log.warn('[TokenInterceptor] Non-401 error encountered: ${err.message}');
     }
 
     return handler.next(err);
@@ -76,18 +77,22 @@ class TokenInterceptor extends Interceptor {
 
   Future<Response<dynamic>> _retry(
       RequestOptions requestOptions, String token) async {
-    final options = Options(
-      method: requestOptions.method,
-      headers: requestOptions.headers..['Authorization'] = 'Bearer $token',
-    );
+    final dio = Dio(BaseOptions(
+      baseUrl: AppConstants.baseUrl,
+      headers: {
+        ...AppConstants.defaultHeaders,
+        'Authorization': 'Bearer $token',
+      },
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ));
 
-    final dio =
-        Dio(); // Attention : ici tu crées un nouveau Dio (sans interceptor)
+    // IMPORTANT : ne pas ajouter d’interceptor ici pour éviter une boucle infinie
     return dio.request(
       requestOptions.path,
       data: requestOptions.data,
       queryParameters: requestOptions.queryParameters,
-      options: options,
+      options: Options(method: requestOptions.method),
     );
   }
 }

@@ -18,8 +18,11 @@ class FoyerRemoteDataSourceImpl implements FoyerRemoteDatasource {
   @override
   Future<FoyerModel> creerFoyer(CreerFoyerRequest request) async {
     try {
-      final response =
-          await dio.post(AppConstants.colocations, data: request.toJson());
+      final response = await dio.post(AppConstants.colocations,
+          data: request.toJson(),
+          options: Options(
+            validateStatus: (status) => status != null && status < 400,
+          ));
       if (response.statusCode == 200 || response.statusCode == 201) {
         return FoyerModel.fromJson(response.data);
       }

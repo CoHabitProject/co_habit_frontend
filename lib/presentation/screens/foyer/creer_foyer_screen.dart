@@ -3,8 +3,7 @@ import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
 import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
-import 'package:co_habit_frontend/presentation/providers/foyer_provider.dart';
-import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/providers.dart';
 import 'package:co_habit_frontend/presentation/screens/foyer/controller/creer_foyer_controller.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
@@ -94,7 +93,7 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
     } catch (e) {
       if (mounted) {
         _showErrorMessage(
-            '[CreerFoyerScreen] Une erreur est survenue lors de la créatio du foyer : $e');
+            '[CreerFoyerScreen] Une erreur est survenue lors de la créatio du foyer : ${e.toString()}');
       }
     }
   }

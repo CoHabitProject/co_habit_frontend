@@ -1,8 +1,11 @@
+import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/auth_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
+import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
 import 'package:co_habit_frontend/domain/repositories/auth_repository.dart';
+import 'package:dio/dio.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource datasource;
@@ -40,25 +43,67 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<bool> refreshToken() async {
-    final oldCredentials = await tokenService.getCredentials();
-    if (oldCredentials == null) return false;
-
-    final newCredentials =
-        await datasource.refreshToken(oldCredentials.refreshToken);
-    if (newCredentials == null) return false;
-
-    // Sauvegarder les nouveaux credentials
-    await tokenService.saveCredentials(newCredentials);
-
-    // Mettre à jour le current user
-    await currentUserService.saveUser(newCredentials.user);
-
-    return true;
+  Future<UtilisateurModel?> getCurrentUser() async {
+    return await currentUserService.getUser();
   }
 
   @override
-  Future<UtilisateurModel?> getCurrentUser() async {
-    return await currentUserService.getUser();
+  Future<UserCredentials?> refreshToken() async {
+    try {
+      final oldCredentials = await tokenService.getCredentials();
+      if (oldCredentials == null) {
+        log.warn('[Repository] refreshToken → No stored credentials found.');
+        return null;
+      }
+
+      final oldRefreshToken = oldCredentials.refreshToken;
+      log.debug(
+          '[Repository] refreshToken → Using old token: $oldRefreshToken');
+
+      final dioNoInterceptor = Dio(BaseOptions(baseUrl: AppConstants.baseUrl));
+
+      final response = await dioNoInterceptor.post(
+        AppConstants.refresh,
+        data: {
+          'refreshToken': oldRefreshToken,
+        },
+        options: Options(contentType: 'application/json'),
+      );
+
+      log.debug('[Repository] refreshToken → status: ${response.statusCode}');
+      log.debug('[Repository] refreshToken → response: ${response.data}');
+
+      if (response.statusCode == 200 && response.data != null) {
+        final tokens = response.data;
+        final accessToken = tokens['access_token'];
+        final refreshToken = tokens['refresh_token'];
+        final expiresIn = tokens['expires_in'];
+
+        final user = await datasource.fetchCurrentUser(accessToken);
+        if (user == null) {
+          log.warn(
+              '[Repository] refreshToken → Failed to fetch user after refresh.');
+          return null;
+        }
+
+        final expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
+
+        final newCredentials = UserCredentials(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          tokenExpiry: expiryDate,
+          user: user,
+        );
+
+        await tokenService.saveCredentials(newCredentials);
+        await currentUserService.saveUser(user);
+
+        return tokenService.getCredentials();
+      }
+    } catch (e, stack) {
+      log.error('[Repository] refreshToken → $e', stackTrace: stack);
+    }
+
+    return null;
   }
 }

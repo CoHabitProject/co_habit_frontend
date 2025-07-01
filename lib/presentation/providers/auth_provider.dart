@@ -23,29 +23,36 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _user != null;
   bool get isInitialized => _initialized;
 
-  // Appelé au lancement de l'app (main)
+// Appelé au lancement de l'app (main)
   Future<void> initAuth() async {
     final credentials = await tokenService.getCredentials();
+    _log.info(
+        '[AUTO LOGIN] Credentials trouvés: ${credentials?.user.toJson()}');
 
-    _log.info('[AUTO LOGIN] Credentials: ${credentials?.user.toJson()}');
-    // Verification des credentials
     if (credentials != null) {
-      final expired = await tokenService.isTokenExpired();
+      final isExpired = await tokenService.isTokenExpired();
+      _log.debug('[AUTO LOGIN] Token expiré: $isExpired');
 
-      if (expired) {
-        final refreshed = await authRepository.refreshToken();
-
-        if (!refreshed) {
-          // purge tout si le refresj échoue
+      if (isExpired) {
+        final refreshedCredentials = await authRepository.refreshToken();
+        if (refreshedCredentials == null) {
+          _log.warn(
+              '[AUTO LOGIN] Échec du refresh, suppression des credentials.');
           await logout();
           _initialized = true;
           notifyListeners();
           return;
         }
+        _user = refreshedCredentials.user;
+      } else {
+        // Token encore valide → récupération du user
+        _user = await currentUserService.getUser();
       }
-
-      _user = await currentUserService.getUser();
+    } else {
+      _log.info(
+          '[AUTO LOGIN] Aucun credentials trouvés → utilisateur non connecté.');
     }
+
     _initialized = true;
     notifyListeners();
   }

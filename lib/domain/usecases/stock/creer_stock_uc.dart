@@ -7,6 +7,6 @@ class CreerStockUc {
 
   CreerStockUc({required this.stockRepository});
 
-  Future<StockEntity> execute(StockRequest stock) async =>
-      await stockRepository.save(stock);
+  Future<StockEntity> execute(StockRequest stock, int colocationId) async =>
+      await stockRepository.save(stock, colocationId);
 }

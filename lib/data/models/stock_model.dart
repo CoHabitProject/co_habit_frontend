@@ -14,9 +14,9 @@ class StockModel extends StockEntity {
     return StockModel(
         id: json['id'],
         title: json['title'],
-        color: json['color'],
+        color: Color(int.parse(json['color'])),
         imageAsset: json['imageAsset'],
-        items: json['items'],
+        items: json['items'] ?? List.empty(),
         maxCapacity: json['maxCapacity']);
   }
 

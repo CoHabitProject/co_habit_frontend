@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:dio/dio.dart';
@@ -8,7 +9,7 @@ abstract class StockRemoteDatasource {
   Future<List<StockModel>> getLowestStock();
   Future<List<StockModel>> getAllStock();
   Future<StockModel> updateStock(StockRequest stock);
-  Future<StockModel> save(StockRequest stock);
+  Future<StockModel> save(StockRequest stock, int colocationId);
 }
 
 class StockRemoteDatasourceImpl implements StockRemoteDatasource {
@@ -65,12 +66,17 @@ class StockRemoteDatasourceImpl implements StockRemoteDatasource {
   }
 
   @override
-  Future<StockModel> save(StockRequest stock) async {
+  Future<StockModel> save(StockRequest stock, int colocationId) async {
     try {
-      final response = await dio.post('/stock/save', data: stock);
+      final response =
+          await dio.post(AppConstants.creerStockRoute(colocationId),
+              data: stock,
+              options: Options(
+                validateStatus: (status) => status != null && status < 400,
+              ));
       final json = response.data;
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return StockModel.fromJson(json);
       }
       throw Exception(
