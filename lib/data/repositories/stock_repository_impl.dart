@@ -2,11 +2,9 @@ import 'dart:ui';
 
 import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
-import 'package:co_habit_frontend/data/models/requests/creer_stock_item_request.dart';
 import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
-import 'package:co_habit_frontend/domain/entities/stock_item_entity.dart';
 import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
 import 'package:get_it/get_it.dart';
 
@@ -78,19 +76,6 @@ class StockRepositoryImpl implements StockRepository {
       return await stockRemoteDatasource.save(request, colocationId);
     } catch (e) {
       _log.error('Repository Error on save: $e');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<StockItemEntity> addItemToStock(
-      int colocationId, int stockId, CreerStockItemRequest request) async {
-    try {
-      return await stockRemoteDatasource.addItemToStock(
-          colocationId, stockId, request);
-    } catch (e, stack) {
-      _log.error('[StockRepositoryImpl] Error on addItemToStock: $e',
-          stackTrace: stack);
       rethrow;
     }
   }

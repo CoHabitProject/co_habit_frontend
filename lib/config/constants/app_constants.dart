@@ -18,8 +18,16 @@ class AppConstants {
   static String stockMainRoute(int colocationId) =>
       '/interne/colocations/$colocationId/stocks';
 
-  static String creerStockItemRoute(int colocationId, int stockId) =>
+  static String stockItemMainRoute(int colocationId, int stockId) =>
       '/interne/colocations/$colocationId/stocks/$stockId/items';
+
+  static String updateStockItemRoute(
+          int colocationId, int stockId, int itemId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId/items/$itemId';
+
+  static String deleteStockItemRoute(
+          int colocationId, int stockId, int itemId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId/items/$itemId';
 
   // Keycloak Auth
   static const String clientId = 'co-habit-confidential';

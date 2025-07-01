@@ -9,6 +9,8 @@ import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
 import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_items_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -79,6 +81,9 @@ void _registerDataSources() {
   getIt.registerLazySingleton<StockRemoteDatasource>(
     () => StockRemoteDatasourceImpl(dio: getIt()),
   );
+
+  getIt.registerLazySingleton<StockItemRemoteDatasource>(
+      () => StockItemRemoteDatasourceImpl(dio: getIt()));
 }
 
 void _registerRepositories() {
@@ -99,6 +104,9 @@ void _registerRepositories() {
   getIt.registerLazySingleton<StockRepository>(
     () => StockRepositoryImpl(stockRemoteDatasource: getIt()),
   );
+
+  getIt.registerLazySingleton<StockItemRepository>(
+      () => StockItemRepositoryImpl(remoteDatasource: getIt()));
 }
 
 void _registerProviders() {
@@ -128,7 +136,14 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => GetAllStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => CreerStockUc(stockRepository: getIt()));
-  getIt.registerLazySingleton(() => CreerStockItemUc(stockRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => CreerStockItemUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetAllStockItemsUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => UpdateStockItemListUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => DeleteStockItemUc(stockItemRepository: getIt()));
 }
 
 void resetDependencies() {

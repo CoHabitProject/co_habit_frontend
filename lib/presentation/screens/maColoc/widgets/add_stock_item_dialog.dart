@@ -1,7 +1,7 @@
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/log_service.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
-import 'package:co_habit_frontend/data/models/requests/creer_stock_item_request.dart';
+import 'package:co_habit_frontend/data/models/requests/stock_item_request.dart';
 import 'package:co_habit_frontend/data/models/stock_item_model.dart';
 import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
@@ -38,7 +38,7 @@ class AddStockItemDialog extends StatelessWidget {
         // sauvegarde en bdd
         try {
           // Création du request
-          final CreerStockItemRequest request = CreerStockItemRequest(
+          final StockItemRequest request = StockItemRequest(
               name: nameController.text.trim(),
               quantity: int.parse(quantityController.text.trim()));
           // Récuperation de l'id de la coloc
