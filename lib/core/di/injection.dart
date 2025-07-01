@@ -8,6 +8,7 @@ import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -127,6 +128,7 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => GetAllStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => CreerStockUc(stockRepository: getIt()));
+  getIt.registerLazySingleton(() => CreerStockItemUc(stockRepository: getIt()));
 }
 
 void resetDependencies() {

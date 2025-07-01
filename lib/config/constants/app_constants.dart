@@ -17,6 +17,10 @@ class AppConstants {
   // API Stock routes
   static String stockMainRoute(int colocationId) =>
       '/interne/colocations/$colocationId/stocks';
+
+  static String creerStockItemRoute(int colocationId, int stockId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId/items';
+
   // Keycloak Auth
   static const String clientId = 'co-habit-confidential';
   static const String clientSecret = 'secret';
