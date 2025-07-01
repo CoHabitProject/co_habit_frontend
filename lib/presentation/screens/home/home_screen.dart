@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
+import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
+import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/screens/taches/widgets/taches_card.dart';
@@ -25,10 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
   List<TacheEntity> tachesRecentes = [];
   bool tachesIsLoading = true;
   List<StockEntity> lowestStock = [];
+  UtilisateurModel? currentUser;
 
   @override
   void initState() {
     super.initState();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    if (authProvider.isAuthenticated) {
+      currentUser = authProvider.user;
+    }
     _loadRecentTaches();
     _loadLowestStock();
   }
@@ -75,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(
-            firstName: firstName,
-            lastName: lastName,
+            firstName: currentUser!.firstName,
+            lastName: currentUser!.lastName,
             avatarColor: Colors.blueAccent),
         body: SafeArea(
           child: SingleChildScrollView(

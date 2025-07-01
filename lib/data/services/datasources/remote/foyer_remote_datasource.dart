@@ -37,11 +37,9 @@ class FoyerRemoteDataSourceImpl implements FoyerRemoteDatasource {
   @override
   Future<FoyerModel> getFoyerByCode(String code) async {
     try {
-      final response = await dio.get('/get/foyerByCode/$code');
-      final FoyerModel foyer = response.data;
-
+      final response = await dio.post(AppConstants.creerRejoindreRoute(code));
       if (response.statusCode == 200) {
-        return foyer;
+        return FoyerModel.fromJson(response.data);
       } else {
         throw Exception('Erreur API: Status code ${response.statusCode}');
       }

@@ -72,7 +72,8 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       );
 
       log.debug('[Datasource] refreshToken → status: ${response.statusCode}');
-      log.debug('[Datasource] refreshToken → response: ${response.data}');
+      log.debug(
+          '[Datasource] refreshToken → response: ${response.data.access_token}');
 
       if (response.statusCode == 200 && response.data != null) {
         final tokens = response.data;

@@ -1,12 +1,13 @@
-import 'dart:io';
-import 'package:co_habit_frontend/data/models/foyer_model.dart';
+import 'package:co_habit_frontend/core/services/log_service.dart';
 import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/foyer_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/foyer_entity.dart';
 import 'package:co_habit_frontend/domain/repositories/foyer_repository.dart';
+import 'package:get_it/get_it.dart';
 
 class FoyerRepositoryImpl implements FoyerRepository {
   final FoyerRemoteDatasource remoteDataSource;
+  final _log = GetIt.instance<LogService>();
 
   FoyerRepositoryImpl({required this.remoteDataSource});
 
@@ -15,7 +16,7 @@ class FoyerRepositoryImpl implements FoyerRepository {
     try {
       return await remoteDataSource.creerFoyer(request);
     } catch (e) {
-      print('Repository Error: $e');
+      _log.error('[FoyerRepositoryImpl] Repository Error: $e');
       rethrow;
     }
   }
@@ -23,49 +24,10 @@ class FoyerRepositoryImpl implements FoyerRepository {
   @override
   Future<FoyerEntity> getFoyerByCode(String code) async {
     try {
-      // TODO : Decommenter quand quand back OK
-      // return await remoteDataSource.getFoyerByCode(code);
-      return FoyerModel(
-          id: 1,
-          name: 'Super coloc',
-          ville: 'Lyon',
-          adresse: '12 Rue de Lyon',
-          codePostal: '69003',
-          nbPersonnes: 4,
-          dateEntree: '10/10/2025',
-          code: '38256',
-          membres: [
-            // UtilisateurModel(
-            //     id: 1,
-            //     firstName: 'Carlos',
-            //     lastName: 'Ceren',
-            //     email: 'carlosceren@email.fr',
-            //     dateDeNaissance: DateTime(201, 07, 28),
-            //     dateEntree: DateTime(2025, 10, 10)),
-            // UtilisateurModel(
-            //     id: 1,
-            //     firstName: 'Axel',
-            //     lastName: 'Gallic',
-            //     email: 'awxelGallic@email.fr',
-            //     dateDeNaissance: DateTime(201, 07, 28),
-            //     dateEntree: DateTime(2025, 10, 10)),
-            // UtilisateurModel(
-            //     id: 1,
-            //     firstName: 'Bertrand',
-            //     lastName: 'Renaudin',
-            //     email: 'bertrandrenaudin@email.fr',
-            //     dateDeNaissance: DateTime(201, 07, 28),
-            //     dateEntree: DateTime(2025, 10, 10)),
-            // UtilisateurModel(
-            //     id: 1,
-            //     firstName: 'Dmitri',
-            //     lastName: 'Chine',
-            //     email: 'dmitrichine@email.fr',
-            //     dateDeNaissance: DateTime(201, 07, 28),
-            //     dateEntree: DateTime(2025, 10, 10)),
-          ]);
+      return await remoteDataSource.getFoyerByCode(code);
     } catch (e) {
-      stderr.write('Repository Error on getFoyerByCode: $e');
+      _log.error(
+          '[FoyerRepositoryImpl] Repository Error on getFoyerByCode: $e');
       rethrow;
     }
   }

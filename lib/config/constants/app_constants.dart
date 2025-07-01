@@ -12,6 +12,7 @@ class AppConstants {
 
   // API foyer routes
   static const String colocations = '/interne/colocations';
+  static String creerRejoindreRoute(String code) => '$colocations/join/$code';
 
   // API Stock routes
   static String creerStockRoute(int colocationId) =>

@@ -4,7 +4,7 @@ import 'package:co_habit_frontend/core/services/validation_service.dart';
 import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
-import 'package:co_habit_frontend/presentation/screens/foyer/controller/creer_foyer_controller.dart';
+import 'package:co_habit_frontend/presentation/screens/foyer/controller/foyer_controller.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
@@ -27,14 +27,14 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
   late final TextEditingController _villeController;
   late final TextEditingController _adresseController;
   late final TextEditingController _codePostalController;
-  late final CreerFoyerController _creerFoyerController;
+  late final FoyerController _creerFoyerController;
 
   void _initControllers() {
     _nameController = TextEditingController();
     _villeController = TextEditingController();
     _adresseController = TextEditingController();
     _codePostalController = TextEditingController();
-    _creerFoyerController = CreerFoyerController(
+    _creerFoyerController = FoyerController(
         creerFoyerUc: getIt<CreerFoyerUseCase>(),
         creerStockUc: getIt<CreerStockUc>(),
         foyerProvider: context.read<FoyerProvider>(),

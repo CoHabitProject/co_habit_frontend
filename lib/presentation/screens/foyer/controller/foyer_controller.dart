@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:co_habit_frontend/data/models/foyer_model.dart';
 import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
@@ -7,14 +5,16 @@ import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
 
-class CreerFoyerController {
+class FoyerController {
   final CreerFoyerUseCase creerFoyerUc;
   final CreerStockUc creerStockUc;
+  final GetFoyerByCodeUc? getFoyerByCodeUc;
   final FoyerProvider foyerProvider;
   final StockProvider stockProvider;
 
-  CreerFoyerController(
-      {required this.creerFoyerUc,
+  FoyerController(
+      {this.getFoyerByCodeUc,
+      required this.creerFoyerUc,
       required this.creerStockUc,
       required this.foyerProvider,
       required this.stockProvider});
@@ -51,5 +51,13 @@ class CreerFoyerController {
       }),
     );
     stockProvider.setStock(createdStocks);
+  }
+
+  Future<void> rejoindreColoc(String code) async {
+    if (getFoyerByCodeUc == null) {
+      throw Exception("GetFoyerByCodeUc non initialisé");
+    }
+    final foyer = await getFoyerByCodeUc!.execute(code);
+    foyerProvider.setFoyer(foyer as FoyerModel);
   }
 }

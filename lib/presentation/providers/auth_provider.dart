@@ -34,16 +34,9 @@ class AuthProvider extends ChangeNotifier {
       _log.debug('[AUTO LOGIN] Token expiré: $isExpired');
 
       if (isExpired) {
-        final refreshedCredentials = await authRepository.refreshToken();
-        if (refreshedCredentials == null) {
-          _log.warn(
-              '[AUTO LOGIN] Échec du refresh, suppression des credentials.');
-          await logout();
-          _initialized = true;
-          notifyListeners();
-          return;
-        }
-        _user = refreshedCredentials.user;
+        _log.warn(
+            '[AUTO LOGIN] Token expiré mais on attend la prochaine requête pour le refresh via Interceptor.');
+        _user = credentials.user; // On garde les credentials existants
       } else {
         // Token encore valide → récupération du user
         _user = await currentUserService.getUser();
