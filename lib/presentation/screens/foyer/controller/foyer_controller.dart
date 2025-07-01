@@ -4,6 +4,8 @@ import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class FoyerController {
   final CreerFoyerUseCase creerFoyerUc;
@@ -29,17 +31,17 @@ class FoyerController {
       StockRequest(
           title: 'Hygiène',
           imageAsset: 'assets/images/stock/soap.png',
-          color: '0xFF369FFF',
+          color: const Color(0xFF369FFF).toHexString(),
           maxCapacity: 50),
       StockRequest(
           title: 'Entretien',
           imageAsset: 'assets/images/stock/soap.png',
-          color: '0xFFFF993A',
+          color: const Color(0xFFFF993A).toHexString(),
           maxCapacity: 50),
       StockRequest(
           title: 'Courses',
           imageAsset: 'assets/images/stock/soap.png',
-          color: '0xFF8AC53E',
+          color: const Color(0xFF8AC53E).toHexString(),
           maxCapacity: 100),
     ];
 

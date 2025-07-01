@@ -1,16 +1,20 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/stock_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/stock_entity.dart';
 import 'package:co_habit_frontend/domain/repositories/stock_repository.dart';
+import 'package:get_it/get_it.dart';
 
 class StockRepositoryImpl implements StockRepository {
   final StockRemoteDatasource stockRemoteDatasource;
 
   StockRepositoryImpl({required this.stockRemoteDatasource});
+
+  final _log = GetIt.instance<LogService>();
 
   @override
   Future<List<StockEntity>> getLowestStock() async {
@@ -48,11 +52,11 @@ class StockRepositoryImpl implements StockRepository {
   }
 
   @override
-  Future<List<StockEntity>> getAllStock() async {
+  Future<List<StockEntity>> getAllStock(int colocationId) async {
     try {
-      return stockRemoteDatasource.getAllStock();
+      return stockRemoteDatasource.getAllStock(colocationId);
     } catch (e) {
-      stderr.write('Repository Error on getAllStock: $e');
+      _log.error('Repository Error on getAllStock: $e');
       rethrow;
     }
   }

@@ -15,9 +15,8 @@ class AppConstants {
   static String creerRejoindreRoute(String code) => '$colocations/join/$code';
 
   // API Stock routes
-  static String creerStockRoute(int colocationId) =>
+  static String stockMainRoute(int colocationId) =>
       '/interne/colocations/$colocationId/stocks';
-
   // Keycloak Auth
   static const String clientId = 'co-habit-confidential';
   static const String clientSecret = 'secret';

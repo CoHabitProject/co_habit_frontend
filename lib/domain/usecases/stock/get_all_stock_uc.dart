@@ -6,6 +6,6 @@ class GetAllStockUc {
 
   GetAllStockUc({required this.stockRepository});
 
-  Future<List<StockEntity>> execute() async =>
-      await stockRepository.getAllStock();
+  Future<List<StockEntity>> execute(int colocationId) async =>
+      await stockRepository.getAllStock(colocationId);
 }

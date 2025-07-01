@@ -5,6 +5,7 @@ import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
+import 'package:co_habit_frontend/presentation/providers/providers.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
@@ -47,11 +48,11 @@ class _MaColocScreenState extends State<MaColocScreen> {
   @override
   void initState() {
     super.initState();
+    _loadFoyer();
     final stock = context.read<StockProvider>().stock;
     if (stock.isEmpty) {
-      _loadStock();
+      _loadStock(foyer!.id);
     }
-    _loadFoyer();
   }
 
   void showStockMenu(BuildContext context, List<ListTile> actions) {
@@ -69,21 +70,22 @@ class _MaColocScreenState extends State<MaColocScreen> {
 
   Future<void> _loadFoyer() async {
     try {
-      final useCase = getIt<GetFoyerByCodeUc>();
-      final foyerData = await useCase.execute('code');
+      final savedFoyer = context.read<FoyerProvider>().foyer;
 
-      setState(() {
-        foyer = foyerData;
-      });
+      if (savedFoyer != null) {
+        setState(() {
+          foyer = savedFoyer;
+        });
+      }
     } catch (e) {
       stderr.write('Error : $e');
     }
   }
 
-  Future<void> _loadStock() async {
+  Future<void> _loadStock(int colocationId) async {
     try {
       final useCase = getIt<GetAllStockUc>();
-      final stockData = await useCase.execute();
+      final stockData = await useCase.execute(colocationId);
 
       if (!mounted) return;
       final stockProvider = Provider.of<StockProvider>(context, listen: false);
