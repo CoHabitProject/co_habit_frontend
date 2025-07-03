@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 abstract class FoyerRemoteDatasource {
   Future<FoyerModel> creerFoyer(CreerFoyerRequest request);
   Future<FoyerModel> getFoyerByCode(String code);
+  Future<FoyerModel> getFoyerById(int id);
 }
 
 class FoyerRemoteDataSourceImpl implements FoyerRemoteDatasource {
@@ -45,6 +46,23 @@ class FoyerRemoteDataSourceImpl implements FoyerRemoteDatasource {
       }
     } catch (e) {
       log.error('API Error on getFoyerByCode: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<FoyerModel> getFoyerById(int id) async {
+    try {
+      final response = await dio.get(AppConstants.getFoyerByIdRoute(id));
+      if (response.statusCode == 200) {
+        return FoyerModel.fromJson(response.data);
+      } else {
+        throw Exception(
+            '[FoyerRemoteDatasource] Erreur dans la réponse status code: ${response.statusCode}');
+      }
+    } catch (e, stack) {
+      log.error('[FoyerRemoteDatasource] API Error on getFoyerById : $e',
+          stackTrace: stack);
       rethrow;
     }
   }

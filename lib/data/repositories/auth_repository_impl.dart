@@ -4,6 +4,7 @@ import 'package:co_habit_frontend/data/services/datasources/remote/auth_remote_d
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
 import 'package:co_habit_frontend/domain/entities/user_credentials.dart';
 import 'package:co_habit_frontend/domain/repositories/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource datasource;
@@ -38,6 +39,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() async {
     await tokenService.clearCredentials();
     await currentUserService.clearUser();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('foyerId');
   }
 
   @override

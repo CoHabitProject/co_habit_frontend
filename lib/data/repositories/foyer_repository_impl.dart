@@ -31,4 +31,14 @@ class FoyerRepositoryImpl implements FoyerRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<FoyerEntity> getFoyerById(int id) async {
+    try {
+      return await remoteDataSource.getFoyerById(id);
+    } catch (e) {
+      _log.error('[FoyerRepositoryImpl] Repository Error on getFoyerById: $e');
+      rethrow;
+    }
+  }
 }

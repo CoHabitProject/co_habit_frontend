@@ -6,16 +6,19 @@ import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FoyerController {
   final CreerFoyerUseCase creerFoyerUc;
   final CreerStockUc creerStockUc;
   final GetFoyerByCodeUc? getFoyerByCodeUc;
+  final GetFoyerByIdUc? getFoyerByIdUc;
   final FoyerProvider foyerProvider;
   final StockProvider stockProvider;
 
   FoyerController(
       {this.getFoyerByCodeUc,
+      this.getFoyerByIdUc,
       required this.creerFoyerUc,
       required this.creerStockUc,
       required this.foyerProvider,
@@ -53,13 +56,34 @@ class FoyerController {
       }),
     );
     stockProvider.setStock(createdStocks);
+
+    // On fait la sauvegarde aussi dans SharedPreferences pour check lors du lancement de l'application
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('foyerId', foyer.id);
   }
 
   Future<void> rejoindreColoc(String code) async {
     if (getFoyerByCodeUc == null) {
-      throw Exception("GetFoyerByCodeUc non initialisé");
+      throw Exception('GetFoyerByCodeUc non initialisé');
     }
     final foyer = await getFoyerByCodeUc!.execute(code);
+    foyerProvider.setFoyer(foyer as FoyerModel);
+    // On fait la sauvegarde aussi dans SharedPreferences pour check lors du lancement de l'application
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('foyerId', foyer.id);
+  }
+
+  Future<void> setFoyerFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final id = prefs.getInt('foyerId');
+    if (getFoyerByIdUc == null) {
+      throw Exception('GetFoyerByIdUc non initialisé');
+    }
+
+    if (id == null) {
+      throw Exception('id du foyer pas présent dans shared preférences');
+    }
+    final foyer = await getFoyerByIdUc!.execute(id);
     foyerProvider.setFoyer(foyer as FoyerModel);
   }
 }

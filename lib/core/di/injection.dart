@@ -127,6 +127,7 @@ void _registerUseCases() {
   // Foyer
   getIt.registerLazySingleton(() => CreerFoyerUseCase(getIt()));
   getIt.registerLazySingleton(() => GetFoyerByCodeUc(foyerRepository: getIt()));
+  getIt.registerLazySingleton(() => GetFoyerByIdUc(foyerRepository: getIt()));
 
   // Tâches
   getIt.registerLazySingleton(() => GetLastCreatedTachesUc(getIt()));
