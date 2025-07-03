@@ -1,7 +1,12 @@
+import 'package:co_habit_frontend/core/di/injection.dart';
+import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/foyer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   final String? initialMessage;
@@ -20,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final foyerProvider = Provider.of<FoyerProvider>(context, listen: false);
+
     final success = await authProvider.login(
       _usernameController.text.trim(),
       _passwordController.text.trim(),
@@ -27,14 +34,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => _isLoading = false);
 
-    if (mounted) {
-      if (success) {
-        context.go('/choixInitial');
+    if (!mounted) return;
+
+    if (success) {
+      final prefs = await SharedPreferences.getInstance();
+      final foyerId = prefs.getInt('foyerId');
+
+      if (foyerId != null) {
+        try {
+          final foyer = await getIt<GetFoyerByIdUc>().execute(foyerId);
+          foyerProvider.setFoyer(foyer as FoyerModel);
+          if (mounted) context.go('/home');
+        } catch (e) {
+          // Si erreur (foyer supprimé, etc.), aller quand même à choixInitial
+          if (mounted) context.go('/choixInitial');
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('La connexion a échoué')),
-        );
+        if (mounted) context.go('/choixInitial');
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('La connexion a échoué')),
+      );
     }
   }
 

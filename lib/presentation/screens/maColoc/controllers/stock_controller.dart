@@ -55,4 +55,19 @@ class StockController {
       stockProvider.clearItemsToDelete();
     }
   }
+
+  Future<List<StockModel>> getLowestStock() async {
+    await loadAllStocksAndItems();
+    final stock = stockProvider.stock;
+
+    // Filtrer ceux à moins de 50%
+    final lowStock = stock.where((s) => s.itemCountPercentage < 0.5).toList();
+
+    // Trier par ordre croissant
+    lowStock
+        .sort((a, b) => a.itemCountPercentage.compareTo(b.itemCountPercentage));
+
+    // Retourner les 2 plus bas
+    return lowStock.take(2).toList();
+  }
 }

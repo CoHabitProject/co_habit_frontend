@@ -99,11 +99,15 @@ final appRouter = GoRouter(
               stringPath.contains('/taches') ||
               stringPath.contains('/depenses');
 
+          final isHomeScreen = stringPath == '/home';
+
           return Scaffold(
             body: child,
-            bottomNavigationBar:
-                CustomBottomNavbar(showCenterButton: showCenterButton),
-            floatingActionButton: FloatingNavbarButton(routePath: stringPath),
+            bottomNavigationBar: CustomBottomNavbar(
+                showCenterButton: !isHomeScreen && showCenterButton),
+            floatingActionButton: isHomeScreen
+                ? null
+                : FloatingNavbarButton(routePath: stringPath),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
           );

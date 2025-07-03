@@ -6,13 +6,15 @@ import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
-import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/providers.dart';
 import 'package:co_habit_frontend/presentation/screens/home/widgets/custom_app_bar.dart';
+import 'package:co_habit_frontend/presentation/screens/maColoc/controllers/stock_controller.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/screens/taches/widgets/taches_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/flexible_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,16 +24,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String firstName = 'Carlos';
-  String lastName = 'Ceren';
+  late final StockController _stockController;
   List<TacheEntity> tachesRecentes = [];
   bool tachesIsLoading = true;
-  List<StockEntity> lowestStock = [];
+  List<StockModel> lowestStock = [];
   UtilisateurModel? currentUser;
 
   @override
   void initState() {
     super.initState();
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.isAuthenticated) {
       currentUser = authProvider.user;
@@ -66,16 +68,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadLowestStock() async {
-    try {
-      final useCase = getIt<GetLowestStockUc>();
-      final stock = await useCase.execute();
+    final prefs = await SharedPreferences.getInstance();
+    final colocId = prefs.getInt('foyerId');
 
-      setState(() {
-        lowestStock = stock;
-      });
-    } catch (e) {
-      stderr.write('Error : $e');
-    }
+    if (!mounted || colocId == null) return;
+
+    _stockController = StockController(
+      getAllStockUc: getIt<GetAllStockUc>(),
+      getAllStockItemsUc: getIt<GetAllStockItemsUc>(),
+      stockProvider: context.read<StockProvider>(),
+      colocationId: colocId,
+    );
+
+    final stock = await _stockController.getLowestStock();
+
+    setState(() {
+      lowestStock = stock;
+    });
   }
 
   @override
