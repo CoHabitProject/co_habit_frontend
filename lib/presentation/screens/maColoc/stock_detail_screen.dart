@@ -126,7 +126,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
+      onPopInvoked: (didPop) async {
         if (didPop) return;
         final navigator = Navigator.of(context);
         await _stockController.persistPendingItemUpdates(widget.stockId);
