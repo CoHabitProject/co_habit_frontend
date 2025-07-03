@@ -1,58 +1,93 @@
-import 'dart:io';
-
+import 'package:co_habit_frontend/config/constants/app_constants.dart';
+import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/stock_item_request.dart';
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart';
 
 abstract class StockItemRemoteDatasource {
-  Future<void> createItem(StockItemModel item);
-  Future<void> deleteItem(StockItemModel item);
-  Future<void> changeQuantity(int quantity, int id);
+  Future<StockItemModel> addItemToStock(
+      int colocationId, int stockId, StockItemRequest request);
+  Future<void> deleteItem(int colocationId, int stockId, int itemId);
+  Future<void> updateStockItems(
+      StockItemRequest request, int colocationId, int stockId, int itemId);
+  Future<List<StockItemModel>> getAllItems(int colocationId, int stockId);
 }
 
 class StockItemRemoteDatasourceImpl implements StockItemRemoteDatasource {
   final Dio dio;
 
+  final _log = GetIt.instance<LogService>();
+
   StockItemRemoteDatasourceImpl({required this.dio});
 
   @override
-  Future<void> changeQuantity(int quantity, int id) async {
+  Future<StockItemModel> addItemToStock(
+      int colocationId, int stockId, StockItemRequest request) async {
+    try {
+      final response = await dio.post(
+          AppConstants.stockItemMainRoute(colocationId, stockId),
+          data: request.toJson());
+      if (response.statusCode == 201) {
+        return StockItemModel.fromJson(response.data);
+      }
+      throw Exception('[StockRemoteDatasource] Erreur on addItemToStock');
+    } catch (e, stack) {
+      _log.error('[StockRemoteDatasource] API error on addItemToStock: $e',
+          stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<StockItemModel>> getAllItems(
+      int colocationId, int stockId) async {
     try {
       final response =
-          await dio.post('/stockItems/changeQunatity', data: {quantity, id});
+          await dio.get(AppConstants.stockItemMainRoute(colocationId, stockId));
+      final List<dynamic> jsonList = response.data;
 
       if (response.statusCode == 200) {
-        stderr.write('Changement avec succès');
+        return jsonList.map((json) => StockItemModel.fromJson(json)).toList();
       }
-    } catch (e) {
-      stderr.write('API error on changeQuantity: $e');
+      throw Exception(
+          '[StockItemRemoteDatasource] Erreur lors de la récupération des items');
+    } catch (e, stack) {
+      _log.error('[StockItemRemoteDatasource] API error on getAllItems: $e',
+          stackTrace: stack);
       rethrow;
     }
   }
 
   @override
-  Future<void> createItem(StockItemModel item) async {
+  Future<void> updateStockItems(StockItemRequest request, int colocationId,
+      int stockId, int itemId) async {
     try {
-      final response = await dio.post('/stockItems/changeQunatity', data: item);
-
+      final response = await dio.put(
+          AppConstants.updateStockItemRoute(colocationId, stockId, itemId),
+          data: request.toJson());
       if (response.statusCode == 200) {
-        stderr.write('Création avec succès');
+        _log.debug('[StockItemRemoteDatasource] Stock mise à jour avec succès');
       }
-    } catch (e) {
-      stderr.write('API error on changeQuantity: $e');
+    } catch (e, stack) {
+      _log.error(
+          '[StockItemRemoteDatasource] API error on updateStockItems: $e',
+          stackTrace: stack);
       rethrow;
     }
   }
 
   @override
-  Future<void> deleteItem(StockItemModel item) async {
+  Future<void> deleteItem(int colocationId, int stockId, int itemId) async {
     try {
-      final response = await dio.post('/stockItems/changeQunatity', data: item);
-
-      if (response.statusCode == 200) {
-        stderr.write('Suppréssion avec succès');
+      final response = await dio.delete(
+          AppConstants.deleteStockItemRoute(colocationId, stockId, itemId));
+      if (response.statusCode == 204) {
+        _log.debug('[StockItemRemoteDatasource] Stock supprimé avec succès');
       }
-    } catch (e) {
-      stderr.write('API error on changeQuantity: $e');
+    } catch (e, stack) {
+      _log.error('[StockItemRemoteDatasource] API error on deleteItem: $e',
+          stackTrace: stack);
       rethrow;
     }
   }

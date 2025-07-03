@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
-import 'package:co_habit_frontend/data/models/stock_model.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
-import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/providers.dart';
+import 'package:co_habit_frontend/presentation/screens/maColoc/controllers/stock_controller.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,8 @@ class MaColocScreen extends StatefulWidget {
 class _MaColocScreenState extends State<MaColocScreen> {
   FoyerEntity? foyer;
   bool _isBottomSheetOpen = false;
+  // Stock controller
+  late final StockController stockController;
 
   @override
   void didChangeDependencies() {
@@ -47,10 +49,6 @@ class _MaColocScreenState extends State<MaColocScreen> {
   @override
   void initState() {
     super.initState();
-    final stock = context.read<StockProvider>().stock;
-    if (stock.isEmpty) {
-      _loadStock();
-    }
     _loadFoyer();
   }
 
@@ -69,28 +67,27 @@ class _MaColocScreenState extends State<MaColocScreen> {
 
   Future<void> _loadFoyer() async {
     try {
-      final useCase = getIt<GetFoyerByCodeUc>();
-      final foyerData = await useCase.execute('code');
+      final savedFoyer = context.read<FoyerProvider>().foyer;
 
-      setState(() {
-        foyer = foyerData;
-      });
+      if (savedFoyer != null) {
+        setState(() {
+          foyer = savedFoyer;
+        });
+
+        _initController(savedFoyer.id);
+        await stockController.loadAllStocksAndItems();
+      }
     } catch (e) {
       stderr.write('Error : $e');
     }
   }
 
-  Future<void> _loadStock() async {
-    try {
-      final useCase = getIt<GetAllStockUc>();
-      final stockData = await useCase.execute();
-
-      if (!mounted) return;
-      final stockProvider = Provider.of<StockProvider>(context, listen: false);
-      stockProvider.setStock(stockData.whereType<StockModel>().toList());
-    } catch (e) {
-      stderr.write('Error : $e');
-    }
+  void _initController(int colocationId) {
+    stockController = StockController(
+        getAllStockUc: getIt<GetAllStockUc>(),
+        getAllStockItemsUc: getIt<GetAllStockItemsUc>(),
+        stockProvider: context.read<StockProvider>(),
+        colocationId: colocationId);
   }
 
   @override

@@ -10,6 +10,30 @@ class AppConstants {
   static const String refresh = '$auth/refresh';
   static const String userStatus = '/interne/profile';
 
+  // API foyer routes
+  static const String colocations = '/interne/colocations';
+  static String creerRejoindreRoute(String code) => '$colocations/join/$code';
+  static String getFoyerByIdRoute(int id) => '$colocations/$id';
+
+  // API Stock routes
+  static String stockMainRoute(int colocationId) =>
+      '/interne/colocations/$colocationId/stocks';
+
+  static String stockItemMainRoute(int colocationId, int stockId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId/items';
+
+  static String updateStockItemRoute(
+          int colocationId, int stockId, int itemId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId/items/$itemId';
+
+  static String deleteStockItemRoute(
+          int colocationId, int stockId, int itemId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId/items/$itemId';
+
+  // Keycloak Auth
+  static const String clientId = 'co-habit-confidential';
+  static const String clientSecret = 'secret';
+
   // Default headers
   static const Map<String, String> defaultHeaders = {
     'Content-Type': 'application/json',

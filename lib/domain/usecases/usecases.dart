@@ -1,3 +1,6 @@
+export 'package:co_habit_frontend/domain/usecases/foyer/get_foyer_by_id_uc.dart';
+export 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_items_uc.dart';
+export 'package:co_habit_frontend/domain/usecases/stock/update_stock_item_list_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/auth/signup_usecase.dart';
 export 'package:co_habit_frontend/domain/usecases/stock/creer_stock_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/stock/get_lowest_stock_uc.dart';

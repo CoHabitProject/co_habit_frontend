@@ -2,8 +2,9 @@ import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/stock_request.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
-import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
+import 'package:co_habit_frontend/presentation/providers/providers.dart';
 import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -50,23 +51,24 @@ class _AjoutStockScreenState extends State<AjoutStockScreen> {
     return _formKey.currentState!.validate();
   }
 
-  StockModel _buildFormData() {
-    return StockModel(
-        id: 0,
+  StockRequest _buildFormRequest() {
+    return StockRequest(
         title: _nameController.text.trim(),
-        color: color,
         imageAsset: 'assets/images/stock/autre.png',
-        items: List.empty(),
+        color: color.toHexString(),
         maxCapacity: int.parse(_capacityController.text.trim()));
   }
 
   Future<void> _submitForm() async {
     if (!_isFormValid()) return;
 
+    final colocationId =
+        Provider.of<FoyerProvider>(context, listen: false).colocId;
+
     try {
-      final formData = _buildFormData();
+      final request = _buildFormRequest();
       final useCase = getIt<CreerStockUc>();
-      final result = await useCase.execute(formData);
+      final result = await useCase.execute(request, colocationId!);
 
       if (mounted) {
         final stockProvider =
@@ -137,7 +139,7 @@ class _AjoutStockScreenState extends State<AjoutStockScreen> {
         ),
         Row(
           children: [
-            const Text('Couleur'),
+            const Text('Couleur: '),
             const SizedBox(
               width: 10,
             ),
@@ -151,7 +153,11 @@ class _AjoutStockScreenState extends State<AjoutStockScreen> {
                     shape: BoxShape.circle,
                     border: Border.all(width: 1)),
               ),
-            )
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text('#${color.toHexString()}')
           ],
         )
       ],

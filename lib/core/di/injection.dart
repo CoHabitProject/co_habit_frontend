@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
+import 'package:co_habit_frontend/core/services/iml/log_service_impl.dart';
 import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -58,15 +61,16 @@ void _registerServices() {
   getIt.registerLazySingleton(() => TokenService());
   getIt.registerLazySingleton(() => CurrentUserService());
   getIt.registerLazySingleton(() => FloatingNavbarController());
+  getIt.registerLazySingleton<LogService>(() => LogServiceImpl());
 }
 
 void _registerDataSources() {
   getIt.registerLazySingleton<AuthRemoteDatasource>(
-    () => AuthRemoteDatasourceImpl(dio: getIt()),
+    () => AuthRemoteDatasourceImpl(dio: getIt(), log: getIt<LogService>()),
   );
 
   getIt.registerLazySingleton<FoyerRemoteDatasource>(
-    () => FoyerRemoteDataSourceImpl(dio: getIt()),
+    () => FoyerRemoteDataSourceImpl(dio: getIt(), log: getIt<LogService>()),
   );
 
   getIt.registerLazySingleton<TacheRemoteDatasource>(
@@ -76,14 +80,17 @@ void _registerDataSources() {
   getIt.registerLazySingleton<StockRemoteDatasource>(
     () => StockRemoteDatasourceImpl(dio: getIt()),
   );
+
+  getIt.registerLazySingleton<StockItemRemoteDatasource>(
+      () => StockItemRemoteDatasourceImpl(dio: getIt()));
 }
 
 void _registerRepositories() {
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
-        datasource: getIt<AuthRemoteDatasource>(),
-        tokenService: getIt<TokenService>(),
-        currentUserService: getIt<CurrentUserService>(),
-      ));
+      datasource: getIt<AuthRemoteDatasource>(),
+      tokenService: getIt<TokenService>(),
+      currentUserService: getIt<CurrentUserService>(),
+      log: getIt<LogService>()));
 
   getIt.registerLazySingleton<FoyerRepository>(
     () => FoyerRepositoryImpl(remoteDataSource: getIt()),
@@ -96,6 +103,9 @@ void _registerRepositories() {
   getIt.registerLazySingleton<StockRepository>(
     () => StockRepositoryImpl(stockRemoteDatasource: getIt()),
   );
+
+  getIt.registerLazySingleton<StockItemRepository>(
+      () => StockItemRepositoryImpl(remoteDatasource: getIt()));
 }
 
 void _registerProviders() {
@@ -106,9 +116,9 @@ void _registerProviders() {
       ));
 
   getIt.registerLazySingleton(() => TokenInterceptor(
-        tokenService: getIt<TokenService>(),
-        authRepository: getIt<AuthRepository>(),
-      ));
+      tokenService: getIt<TokenService>(),
+      authRepository: getIt<AuthRepository>(),
+      log: getIt<LogService>()));
 }
 
 void _registerUseCases() {
@@ -117,6 +127,7 @@ void _registerUseCases() {
   // Foyer
   getIt.registerLazySingleton(() => CreerFoyerUseCase(getIt()));
   getIt.registerLazySingleton(() => GetFoyerByCodeUc(foyerRepository: getIt()));
+  getIt.registerLazySingleton(() => GetFoyerByIdUc(foyerRepository: getIt()));
 
   // Tâches
   getIt.registerLazySingleton(() => GetLastCreatedTachesUc(getIt()));
@@ -125,6 +136,14 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => GetAllStockUc(stockRepository: getIt()));
   getIt.registerLazySingleton(() => CreerStockUc(stockRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => CreerStockItemUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetAllStockItemsUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => UpdateStockItemListUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => DeleteStockItemUc(stockItemRepository: getIt()));
 }
 
 void resetDependencies() {

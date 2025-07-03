@@ -1,5 +1,6 @@
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class StockModel extends StockEntity {
   StockModel(
@@ -14,9 +15,9 @@ class StockModel extends StockEntity {
     return StockModel(
         id: json['id'],
         title: json['title'],
-        color: json['color'],
+        color: Color(int.parse(json['color'], radix: 16)),
         imageAsset: json['imageAsset'],
-        items: json['items'],
+        items: json['items'] ?? List.empty(),
         maxCapacity: json['maxCapacity']);
   }
 
@@ -32,9 +33,8 @@ class StockModel extends StockEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'title': title,
-      'color': color,
+      'color': color.toHexString(),
       'imageAsset': imageAsset,
       'items': items,
       'maxCapacity': maxCapacity

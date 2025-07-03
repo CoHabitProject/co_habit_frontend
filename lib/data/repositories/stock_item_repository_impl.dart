@@ -1,38 +1,63 @@
-import 'dart:io';
-
-import 'package:co_habit_frontend/data/models/stock_item_model.dart';
+import 'package:co_habit_frontend/core/services/services.dart';
+import 'package:co_habit_frontend/data/models/requests/stock_item_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
+import 'package:co_habit_frontend/domain/entities/stock_item_entity.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
+import 'package:get_it/get_it.dart';
 
 class StockItemRepositoryImpl implements StockItemRepository {
   final StockItemRemoteDatasource remoteDatasource;
 
   StockItemRepositoryImpl({required this.remoteDatasource});
 
+  final _log = GetIt.instance<LogService>();
+
   @override
-  Future<void> changeQuantity(int quantity, int id) async {
+  Future<StockItemEntity> addItemToStock(
+      int colocationId, int stockId, StockItemRequest request) async {
     try {
-      return await remoteDatasource.changeQuantity(quantity, id);
-    } catch (e) {
-      stderr.write('Repository error on changeQuantity: $e');
+      return await remoteDatasource.addItemToStock(
+          colocationId, stockId, request);
+    } catch (e, stack) {
+      _log.error('[StockItemRepositoryImpl] Error on addItemToStock: $e',
+          stackTrace: stack);
+      rethrow;
     }
   }
 
   @override
-  Future<void> createItem(StockItemModel item) async {
+  Future<List<StockItemEntity>> getAllItems(
+      int colocationId, int stockId) async {
     try {
-      return await remoteDatasource.createItem(item);
-    } catch (e) {
-      stderr.write('Repository error on createItem: $e');
+      return await remoteDatasource.getAllItems(colocationId, stockId);
+    } catch (e, stack) {
+      _log.error('[StockItemRepositoryImpl] Error on addItemToStock: $e',
+          stackTrace: stack);
+      rethrow;
     }
   }
 
   @override
-  Future<void> deleteItem(StockItemModel item) async {
+  Future<void> updateStockItems(StockItemRequest request, int colocationId,
+      int stockId, int itemId) async {
     try {
-      return await remoteDatasource.deleteItem(item);
-    } catch (e) {
-      stderr.write('Repository error on deleteItem: $e');
+      return await remoteDatasource.updateStockItems(
+          request, colocationId, stockId, itemId);
+    } catch (e, stack) {
+      _log.error('[StockItemRepositoryImpl] Error on updateStockItems: $e',
+          stackTrace: stack);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteItem(int colocationId, int stockId, int itemId) async {
+    try {
+      return await remoteDatasource.deleteItem(colocationId, stockId, itemId);
+    } catch (e, stack) {
+      _log.error('[StockItemRepositoryImpl] Error on deleteItem: $e',
+          stackTrace: stack);
+      rethrow;
     }
   }
 }

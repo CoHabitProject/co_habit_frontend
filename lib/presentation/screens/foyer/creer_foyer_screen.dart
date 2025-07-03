@@ -1,15 +1,16 @@
-import 'dart:io';
-
 import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
-import 'package:co_habit_frontend/data/models/foyer_model.dart';
+import 'package:co_habit_frontend/data/models/requests/creer_foyer_request.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
+import 'package:co_habit_frontend/presentation/providers/providers.dart';
+import 'package:co_habit_frontend/presentation/screens/foyer/controller/foyer_controller.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/cohabit_button.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_form_field.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CreerFoyerScreen extends StatefulWidget {
   const CreerFoyerScreen({super.key});
@@ -26,18 +27,18 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
   late final TextEditingController _villeController;
   late final TextEditingController _adresseController;
   late final TextEditingController _codePostalController;
-  late final TextEditingController _nbPersonnesController;
-  late final TextEditingController _dateEntreeController;
-
-  DateTime? _dateEntree;
+  late final FoyerController _creerFoyerController;
 
   void _initControllers() {
     _nameController = TextEditingController();
     _villeController = TextEditingController();
     _adresseController = TextEditingController();
     _codePostalController = TextEditingController();
-    _nbPersonnesController = TextEditingController();
-    _dateEntreeController = TextEditingController();
+    _creerFoyerController = FoyerController(
+        creerFoyerUc: getIt<CreerFoyerUseCase>(),
+        creerStockUc: getIt<CreerStockUc>(),
+        foyerProvider: context.read<FoyerProvider>(),
+        stockProvider: context.read<StockProvider>());
   }
 
   void _disposeControllers() {
@@ -45,8 +46,6 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
     _villeController.dispose();
     _adresseController.dispose();
     _codePostalController.dispose();
-    _nbPersonnesController.dispose();
-    _dateEntreeController.dispose();
   }
 
   @override
@@ -62,21 +61,15 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
   }
 
   bool _isFormValid() {
-    return _formKey.currentState!.validate() &&
-        ValidationService.validateDateField(_dateEntree) == null;
+    return _formKey.currentState!.validate();
   }
 
-  FoyerModel _buildFormData() {
-    return FoyerModel(
-        id: 0,
+  CreerFoyerRequest _buildFormData() {
+    return CreerFoyerRequest(
         name: _nameController.text.trim(),
-        ville: _villeController.text.trim(),
         adresse: _adresseController.text.trim(),
-        codePostal: _codePostalController.text.trim(),
-        nbPersonnes: int.parse(_nbPersonnesController.text.trim()),
-        dateEntree: DateFormat('dd-MM-yyyy').format(_dateEntree!),
-        code: '38256',
-        membres: []);
+        ville: _villeController.text.trim(),
+        codePostal: _codePostalController.text.trim());
   }
 
   void _showErrorMessage(String message) {
@@ -92,32 +85,16 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
     }
 
     try {
-      final formData = _buildFormData();
-      final useCase = getIt<CreerFoyerUseCase>();
-      final result = await useCase.execute(formData);
-
+      final request = _buildFormData();
+      await _creerFoyerController.creerFoyerEtStocks(request);
       if (mounted) {
-        // sauvegarde dans provider TODO : supprimmer
-        stderr.write(result);
+        context.go('/home');
       }
     } catch (e) {
       if (mounted) {
-        _showErrorMessage('Une erreur est survenue');
+        _showErrorMessage(
+            '[CreerFoyerScreen] Une erreur est survenue lors de la créatio du foyer : ${e.toString()}');
       }
-    }
-  }
-
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(const Duration(days: 365)));
-
-    if (picked != null && picked != _dateEntree) {
-      setState(() {
-        _dateEntree = picked;
-        _dateEntreeController.text = DateFormat('dd/MM/yyyy').format(picked);
-      });
     }
   }
 
@@ -180,23 +157,6 @@ class _CreerFoyerScreenState extends State<CreerFoyerScreen> {
           validator: (value) =>
               ValidationService.validateCodePostalField(value),
           inputType: TextInputType.number,
-        ),
-        _buildDateField()
-      ],
-    );
-  }
-
-  Widget _buildDateField() {
-    return Column(
-      children: [
-        CustomFormField(
-          controller: _dateEntreeController,
-          label: 'Date d\'entrée',
-          hintText: '12/12/2024',
-          readOnly: true,
-          suffixIcon: IconButton(
-              onPressed: _selectDate, icon: const Icon(Icons.calendar_today)),
-          validator: (_) => ValidationService.validateDateField(_dateEntree),
         ),
       ],
     );
