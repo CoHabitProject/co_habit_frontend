@@ -4,14 +4,10 @@ import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/services/iml/log_service_impl.dart';
 import 'package:co_habit_frontend/core/services/services.dart';
-import 'package:co_habit_frontend/data/repositories/depenses_repository_impl.dart';
 import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
-import 'package:co_habit_frontend/data/services/datasources/remote/depenses_remote_datasource.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -162,6 +158,12 @@ void _registerUseCases() {
       () => UpdateStockItemListUc(stockItemRepository: getIt()));
   getIt.registerLazySingleton(
       () => DeleteStockItemUc(stockItemRepository: getIt()));
+
+  // Dépenses
+  getIt.registerLazySingleton(
+      () => GetAllDepensesUc(depensesRepository: getIt()));
+  getIt
+      .registerLazySingleton(() => CreerDepenseUc(depensesRepository: getIt()));
 }
 
 void resetDependencies() {

@@ -1,5 +1,4 @@
 import 'package:co_habit_frontend/data/models/models.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 

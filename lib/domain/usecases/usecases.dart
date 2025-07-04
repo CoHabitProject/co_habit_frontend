@@ -1,3 +1,7 @@
+export 'package:co_habit_frontend/domain/usecases/depenses/creer_depense_uc.dart';
+export 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
+export 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
+export 'package:co_habit_frontend/domain/usecases/depenses/get_all_depenses_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/foyer/get_foyer_by_id_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/stock/get_all_stock_items_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/stock/update_stock_item_list_uc.dart';
