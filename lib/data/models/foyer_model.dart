@@ -22,7 +22,7 @@ class FoyerModel extends FoyerEntity {
       codePostal: json['postalCode'] ?? '',
       nbPersonnes: json['numberOfPeople'] ?? 0,
       dateEntree: json['dateEntree'] ?? '',
-      code: json['invitation_code'] ?? '',
+      code: json['invitationCode'] ?? '',
       membres: (json['users'] as List)
           .map((e) => UtilisateurModel.fromJson(e))
           .toList(),
@@ -51,7 +51,7 @@ class FoyerModel extends FoyerEntity {
       'codePostal': codePostal,
       'nbPersonnes': nbPersonnes,
       'dateEntree': dateEntree,
-      'code': code,
+      'invitationCode': code,
       'membres': membres
     };
   }

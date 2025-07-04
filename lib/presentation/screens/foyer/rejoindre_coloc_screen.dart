@@ -93,7 +93,7 @@ class _RejoindreColocScreenState extends State<RejoindreColocScreen> {
               ),
             ),
             Pinput(
-              length: 8,
+              length: 5,
               controller: _controller,
               defaultPinTheme: PinTheme(
                 width: 70,
