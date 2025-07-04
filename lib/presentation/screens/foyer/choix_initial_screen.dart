@@ -11,27 +11,21 @@ class ChoixInitialScreen extends StatelessWidget {
       appBar: AppBar(),
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             const Text(
               'Je souhaite : ',
               style: TextStyle(fontSize: 25),
             ),
-            const SizedBox(
-              height: 60,
-            ),
+            const SizedBox(height: 60),
             ChoixInitialCard(
               onTap: () => context.push('/creerFoyer'),
               title: 'Créer une nouvelle colocation',
               icon: Icons.people_alt_outlined,
             ),
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             ChoixInitialCard(
               onTap: () => context.push('/rejoindreColoc'),
               title: 'Rejoindre une colocation',

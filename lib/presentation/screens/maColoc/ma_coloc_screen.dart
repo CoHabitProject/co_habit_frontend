@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
@@ -93,6 +94,7 @@ class _MaColocScreenState extends State<MaColocScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: ScreenAppBar(title: foyer?.name ?? ''),
       body: SafeArea(
         child: SingleChildScrollView(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/services/log_service.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/login_request.dart';
 import 'package:co_habit_frontend/domain/entities/entities.dart';
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
 import 'package:dio/dio.dart';

@@ -12,10 +12,4 @@ class OnboardingService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_onboardingCompleteKey, true);
   }
-
-  // TODO : REMINDER delete this (only for developpement)
-  static Future<void> resetOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_onboardingCompleteKey);
-  }
 }

@@ -30,6 +30,15 @@ class AppConstants {
           int colocationId, int stockId, int itemId) =>
       '/interne/colocations/$colocationId/stocks/$stockId/items/$itemId';
 
+  // API Depenses routes
+  static const String creerDepenseRoute = '/expenses';
+
+  static String getAndDeleteDepeseParIdRoute(int depenseId) =>
+      '/expenses/$depenseId';
+
+  static String getDepensesDuFoyerRoute(int colocationId) =>
+      '/expenses/space/$colocationId';
+
   // Keycloak Auth
   static const String clientId = 'co-habit-confidential';
   static const String clientSecret = 'secret';

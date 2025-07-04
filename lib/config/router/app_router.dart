@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/presentation/screens/depenses/widgets/categorie_depenses_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/screens.dart';
 import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
@@ -57,6 +58,10 @@ final appRouter = GoRouter(
         builder: (context, state) => const AjoutStockScreen(),
       ),
       GoRoute(
+        path: '/creerDepense',
+        builder: (context, state) => const AjouterDepenseScreen(),
+      ),
+      GoRoute(
         path: '/',
         builder: (context, state) => const SplashScreen(),
       ),
@@ -87,6 +92,13 @@ final appRouter = GoRouter(
             builder: (context, state) => const TachesScreen(),
           ),
           GoRoute(
+            path: '/depenses/:label',
+            builder: (context, state) {
+              final label = state.pathParameters['label']!;
+              return CategorieDepensesScreen(categoryLabel: label);
+            },
+          ),
+          GoRoute(
             path: '/depenses',
             name: '/depenses',
             builder: (context, state) => const DepensesScreen(),
@@ -99,11 +111,15 @@ final appRouter = GoRouter(
               stringPath.contains('/taches') ||
               stringPath.contains('/depenses');
 
+          final isHomeScreen = stringPath == '/home';
+
           return Scaffold(
             body: child,
-            bottomNavigationBar:
-                CustomBottomNavbar(showCenterButton: showCenterButton),
-            floatingActionButton: FloatingNavbarButton(routePath: stringPath),
+            bottomNavigationBar: CustomBottomNavbar(
+                showCenterButton: !isHomeScreen && showCenterButton),
+            floatingActionButton: isHomeScreen
+                ? null
+                : FloatingNavbarButton(routePath: stringPath),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
           );

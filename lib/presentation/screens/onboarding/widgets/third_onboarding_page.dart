@@ -29,7 +29,7 @@ class _BuildBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
         alignment: Alignment.bottomCenter,
-        heightFactor: 16.3,
+        heightFactor: 15,
         child: CohabitButton(
           text: 'Suivant',
           buttonType: ButtonType.onboarding,

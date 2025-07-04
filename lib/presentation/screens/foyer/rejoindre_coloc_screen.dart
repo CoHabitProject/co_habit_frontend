@@ -83,17 +83,17 @@ class _RejoindreColocScreenState extends State<RejoindreColocScreen> {
           children: [
             const Text(
               'Entrez le code',
-              style: TextStyle(fontSize: 55, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
             ),
             const Padding(
-              padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+              padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
               child: Text(
                 'Demandez à un colocataire de vous fournir le code dans "Ma coloc"',
                 style: TextStyle(fontSize: 15, color: Colors.black54),
               ),
             ),
             Pinput(
-              length: 8,
+              length: 5,
               controller: _controller,
               defaultPinTheme: PinTheme(
                 width: 70,

@@ -1,7 +1,6 @@
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/data/models/stock_item_model.dart';
-import 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/foyer_provider.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
