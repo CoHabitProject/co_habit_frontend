@@ -4,8 +4,10 @@ import 'package:co_habit_frontend/config/constants/app_constants.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/services/iml/log_service_impl.dart';
 import 'package:co_habit_frontend/core/services/services.dart';
+import 'package:co_habit_frontend/data/repositories/depenses_repository_impl.dart';
 import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
+import 'package:co_habit_frontend/data/services/datasources/remote/depenses_remote_datasource.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
 import 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
@@ -68,44 +70,60 @@ void _registerDataSources() {
   getIt.registerLazySingleton<AuthRemoteDatasource>(
     () => AuthRemoteDatasourceImpl(dio: getIt(), log: getIt<LogService>()),
   );
-
+  // Foyer Datasource
   getIt.registerLazySingleton<FoyerRemoteDatasource>(
     () => FoyerRemoteDataSourceImpl(dio: getIt(), log: getIt<LogService>()),
   );
 
+  // Taches Datasource
   getIt.registerLazySingleton<TacheRemoteDatasource>(
     () => TacheRemoteDatasourceImpl(dio: getIt()),
   );
 
+  // Stock Datasource
   getIt.registerLazySingleton<StockRemoteDatasource>(
     () => StockRemoteDatasourceImpl(dio: getIt()),
   );
 
+  // StockItem Datasource
   getIt.registerLazySingleton<StockItemRemoteDatasource>(
       () => StockItemRemoteDatasourceImpl(dio: getIt()));
+
+  // Dépenses Datasource
+  getIt.registerLazySingleton<DepensesRemoteDatasource>(
+      () => DepensesRemoteDatasourceImpl(dio: getIt()));
 }
 
 void _registerRepositories() {
+  // Auth Repository
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
       datasource: getIt<AuthRemoteDatasource>(),
       tokenService: getIt<TokenService>(),
       currentUserService: getIt<CurrentUserService>(),
       log: getIt<LogService>()));
 
+  // Foyer Repository
   getIt.registerLazySingleton<FoyerRepository>(
     () => FoyerRepositoryImpl(remoteDataSource: getIt()),
   );
 
+  // Tache Repository
   getIt.registerLazySingleton<TacheRepository>(
     () => TacheRepositoryImpl(tacheRemoteDatasource: getIt()),
   );
 
+  // Stock Repository
   getIt.registerLazySingleton<StockRepository>(
     () => StockRepositoryImpl(stockRemoteDatasource: getIt()),
   );
 
+  // StockItem Repository
   getIt.registerLazySingleton<StockItemRepository>(
       () => StockItemRepositoryImpl(remoteDatasource: getIt()));
+
+  // Dépenses Repository
+  getIt.registerLazySingleton<DepensesRepository>(
+      () => DepensesRepositoryImpl(remoteDatasource: getIt()));
 }
 
 void _registerProviders() {

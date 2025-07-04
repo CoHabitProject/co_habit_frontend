@@ -1,5 +1,6 @@
 import 'package:co_habit_frontend/core/services/services.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/login_request.dart';
 import 'package:co_habit_frontend/data/services/datasources/remote/auth_remote_datasource.dart';
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
 import 'package:co_habit_frontend/domain/entities/user_credentials.dart';

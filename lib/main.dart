@@ -19,7 +19,8 @@ void main() async {
         ChangeNotifierProvider(
             create: (_) => StockProvider(stockRepository: getIt())),
         ChangeNotifierProvider(create: (_) => authProvider),
-        ChangeNotifierProvider(create: (_) => FoyerProvider())
+        ChangeNotifierProvider(create: (_) => FoyerProvider()),
+        ChangeNotifierProvider(create: (_) => DepensesProvider())
       ],
       child: const MyApp(),
     ),
