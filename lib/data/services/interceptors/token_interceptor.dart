@@ -87,7 +87,7 @@ class TokenInterceptor extends Interceptor {
         return handler.resolve(clone);
       }
     } catch (e, stack) {
-      _refreshCompleter?.completeError(e);
+      // _refreshCompleter?.completeError(e);
       _refreshCompleter = null;
       log.error('[TokenInterceptor] Exception during refresh: $e',
           stackTrace: stack);

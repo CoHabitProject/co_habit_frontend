@@ -1,14 +1,18 @@
+import 'package:co_habit_frontend/data/models/depense_category_model.dart';
 import 'package:co_habit_frontend/data/models/depense_model.dart';
-import 'package:co_habit_frontend/domain/usecases/depenses/get_all_depenses_uc.dart';
+import 'package:co_habit_frontend/data/models/requests/depense_request.dart';
+import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
 
 class DepensesController {
   final GetAllDepensesUc getAllDepensesUc;
+  final CreerDepenseUc creerDepenseUc;
   final DepensesProvider depensesProvider;
   final int colocationId;
 
   DepensesController(
       {required this.getAllDepensesUc,
+      required this.creerDepenseUc,
       required this.depensesProvider,
       required this.colocationId});
 
@@ -16,6 +20,16 @@ class DepensesController {
     final depenses = await getAllDepensesUc.execute(colocationId);
     final depensesList = depenses.whereType<DepenseModel>().toList();
     depensesProvider.setDepenses(depensesList);
+  }
+
+  Future<void> creerDepense(
+      DepenseRequest request, DepenseCategoryModel category) async {
+    final DepenseModel created =
+        await creerDepenseUc.execute(request) as DepenseModel;
+
+    created.category = category;
+
+    depensesProvider.addDepense(created);
   }
 
   double calculerTotalDepensesColoc() {
@@ -42,5 +56,24 @@ class DepensesController {
 
   void clearDepenses() {
     depensesProvider.clearDepenses();
+  }
+
+  Map<String, List<DepenseModel>> grouperParCategoriesConnues(
+      List<DepenseCategoryModel> categories) {
+    final grouped = <String, List<DepenseModel>>{};
+    final depenses = depensesProvider.depenses;
+
+    for (final cat in categories) {
+      grouped[cat.label] =
+          depenses.where((d) => d.category?.label == cat.label).toList();
+    }
+
+    // Ajouter un groupe "Sans catégorie"
+    final sansCategorie = depenses.where((d) => d.category == null).toList();
+    if (sansCategorie.isNotEmpty) {
+      grouped['sansCategorie'] = sansCategorie;
+    }
+
+    return grouped;
   }
 }

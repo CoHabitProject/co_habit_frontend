@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 
 abstract class DepensesRemoteDatasource {
   Future<List<DepenseModel>> getAllDepenses(int colocationId);
-  Future<DepenseModel> save(DepenseRequest request, int colocationId);
+  Future<DepenseModel> save(DepenseRequest request);
 }
 
 class DepensesRemoteDatasourceImpl implements DepensesRemoteDatasource {
@@ -36,7 +36,7 @@ class DepensesRemoteDatasourceImpl implements DepensesRemoteDatasource {
   }
 
   @override
-  Future<DepenseModel> save(DepenseRequest request, int colocationId) async {
+  Future<DepenseModel> save(DepenseRequest request) async {
     try {
       final response = await dio.post(AppConstants.creerDepenseRoute,
           data: request.toJson());

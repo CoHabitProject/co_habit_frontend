@@ -1,10 +1,22 @@
+import 'package:co_habit_frontend/data/models/depense_category_model.dart';
 import 'package:co_habit_frontend/data/models/depense_model.dart';
 import 'package:flutter/material.dart';
 
 class DepensesProvider extends ChangeNotifier {
   final List<DepenseModel> _depenses = [];
+  final List<DepenseCategoryModel> _categories = [
+    DepenseCategoryModel(label: 'Courses', icon: 'shopping_cart'),
+    DepenseCategoryModel(label: 'Abonnement', icon: 'subscriptions')
+  ];
 
   List<DepenseModel> get depenses => _depenses;
+
+  List<DepenseCategoryModel> get categories => _categories;
+
+  void addCategory(DepenseCategoryModel category) {
+    _categories.add(category);
+    notifyListeners();
+  }
 
   void setDepenses(List<DepenseModel> depenseList) {
     _depenses

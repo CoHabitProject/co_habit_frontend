@@ -1,8 +1,12 @@
+import 'package:co_habit_frontend/data/models/depense_category_model.dart';
 import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/domain/entities/depense_entity.dart';
 
 class DepenseModel extends DepenseEntity {
+  DepenseCategoryModel? category;
+
   DepenseModel({
+    this.category,
     required super.id,
     required super.title,
     required super.description,

@@ -3,5 +3,5 @@ import 'package:co_habit_frontend/domain/entities/entities.dart';
 
 abstract class DepensesRepository {
   Future<List<DepenseEntity>> getAllDepenses(int colocationId);
-  Future<DepenseEntity> save(DepenseRequest request, int colocationId);
+  Future<DepenseEntity> save(DepenseRequest request);
 }

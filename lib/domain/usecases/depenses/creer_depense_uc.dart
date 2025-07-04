@@ -7,7 +7,6 @@ class CreerDepenseUc {
 
   CreerDepenseUc({required this.depensesRepository});
 
-  Future<DepenseEntity> execute(
-          DepenseRequest request, int colocationId) async =>
-      await depensesRepository.save(request, colocationId);
+  Future<DepenseEntity> execute(DepenseRequest request) async =>
+      await depensesRepository.save(request);
 }

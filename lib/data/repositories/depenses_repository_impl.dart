@@ -23,9 +23,9 @@ class DepensesRepositoryImpl implements DepensesRepository {
   }
 
   @override
-  Future<DepenseEntity> save(DepenseRequest request, int colocationId) async {
+  Future<DepenseEntity> save(DepenseRequest request) async {
     try {
-      return await remoteDatasource.save(request, colocationId);
+      return await remoteDatasource.save(request);
     } catch (e, stack) {
       _log.error('[DepensesRepositoryImpl] Error on save: $e',
           stackTrace: stack);

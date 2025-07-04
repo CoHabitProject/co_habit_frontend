@@ -29,7 +29,7 @@ class _BuildBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
         alignment: Alignment.bottomCenter,
-        heightFactor: 16.3,
+        heightFactor: 15,
         child: CohabitButton(
           text: 'Commencer !',
           buttonType: ButtonType.onboarding,
@@ -53,7 +53,7 @@ class _BuildContentSection extends StatelessWidget {
             'Organiez vite, facilement, sereinement.',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 42,
+              fontSize: 35,
               fontFamily: AppTheme.primaryFont,
               fontWeight: FontWeight.w800,
               height: 1.5,
@@ -81,7 +81,7 @@ class _BuildContentSection extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Lottie.network(
                 "https://lottie.host/bfa31e32-75b0-48c7-a55f-5cdf9ff965e9/r30aopmIG5.json",
-                height: 300)),
+                height: 290)),
       ],
     );
   }
