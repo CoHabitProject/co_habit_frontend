@@ -1,5 +1,6 @@
 import 'package:co_habit_frontend/data/models/models.dart';
 import 'package:co_habit_frontend/data/models/requests/requests.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/update_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 
@@ -7,20 +8,21 @@ class StockController {
   final GetAllStockUc getAllStockUc;
   final GetAllStockItemsUc getAllStockItemsUc;
   final UpdateStockItemListUc? updateStockItemListUc;
+  final UpdateStockItemUc? updateStockItemUc;
   final DeleteStockItemUc? deleteStockItemUc;
   final UpdateStockUc? updateStockUc;
   final StockProvider stockProvider;
   final int colocationId;
 
-  StockController({
-    required this.getAllStockUc,
-    required this.getAllStockItemsUc,
-    this.updateStockItemListUc,
-    this.deleteStockItemUc,
-    this.updateStockUc,
-    required this.stockProvider,
-    required this.colocationId,
-  });
+  StockController(
+      {required this.getAllStockUc,
+      required this.getAllStockItemsUc,
+      this.updateStockItemListUc,
+      this.deleteStockItemUc,
+      this.updateStockUc,
+      required this.stockProvider,
+      required this.colocationId,
+      this.updateStockItemUc});
 
   Future<void> loadAllStocksAndItems() async {
     final stocks = await getAllStockUc.execute(colocationId);
@@ -78,6 +80,28 @@ class StockController {
       final updatedStock =
           await updateStockUc!.execute(request, stockId, colocationId);
       stockProvider.updateStockLocally(updatedStock as StockModel);
+    }
+  }
+
+  Future<void> deleteStockItem(
+      int colocationId, int stockId, int itemId) async {
+    if (deleteStockItemUc != null) {
+      await deleteStockItemUc!.execute(colocationId, stockId, itemId);
+      stockProvider.removeItemCompletely(stockId, itemId);
+    }
+  }
+
+  Future<void> updateStockItemAlone(
+      StockItemRequest request, int stockId, int itemId) async {
+    if (updateStockItemUc != null) {
+      await updateStockItemUc!.execute(request, colocationId, stockId, itemId);
+
+      stockProvider.updateItemLocally(
+        stockId: stockId,
+        itemId: itemId,
+        newName: request.name,
+        newQuantity: request.quantity,
+      );
     }
   }
 }

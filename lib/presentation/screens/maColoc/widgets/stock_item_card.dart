@@ -1,4 +1,5 @@
 import 'package:co_habit_frontend/data/models/stock_item_model.dart';
+import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/edit_stock_item_dialog.dart';
 import 'package:flutter/material.dart';
 
 class StockItemCard extends StatelessWidget {
@@ -6,13 +7,15 @@ class StockItemCard extends StatelessWidget {
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
   final bool isFull;
+  final int stockId;
 
   const StockItemCard(
       {super.key,
       required this.item,
       required this.onIncrement,
       required this.onDecrement,
-      required this.isFull});
+      required this.isFull,
+      required this.stockId});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +47,17 @@ class StockItemCard extends StatelessWidget {
             )),
             Row(
               children: [
+                IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (ctx) => EditStockItemDialog(
+                              item: item, stockId: stockId));
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      size: 18,
+                    )),
                 IconButton(
                   onPressed: onDecrement,
                   icon: Icon(isLast
