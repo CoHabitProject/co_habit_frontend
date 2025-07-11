@@ -30,17 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List<TacheEntity> tachesRecentes = [];
   bool tachesIsLoading = true;
   List<StockModel> lowestStock = [];
-  UtilisateurModel? currentUser;
   double totalDepenses = 0.0;
 
   @override
   void initState() {
     super.initState();
-
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (authProvider.isAuthenticated) {
-      currentUser = authProvider.user;
-    }
     _loadRecentTaches();
     _loadLowestStock();
     _loadDepenses();
@@ -53,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final controller =
           Provider.of<FloatingNavbarController>(context, listen: false);
-      controller.hide(); // Cache le bouton sur cet écran
+      controller.hide();
     });
   }
 
@@ -127,13 +121,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider =
+        context.watch<AuthProvider>(); // écoute les changements
+    final currentUser = authProvider.user;
     final formattedTotal = formatCurrency(totalDepenses);
 
     return Scaffold(
       appBar: CustomAppBar(
-          firstName: currentUser?.firstName ?? '',
-          lastName: currentUser?.lastName ?? '',
-          avatarColor: Colors.blueAccent),
+        firstName: currentUser?.firstName ?? '',
+        lastName: currentUser?.lastName ?? '',
+        avatarColor: Colors.blueAccent,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -185,18 +183,19 @@ class _HomeScreenState extends State<HomeScreen> {
               else
                 ...tachesRecentes.map(
                   (tache) => TachesCard(
-                      title: tache.title,
-                      titleWeight: FontWeight.w700,
-                      titleSize: 18,
-                      text: tache.category,
-                      textColor: Colors.blueGrey,
-                      date: tache.date,
-                      status: tache.status,
-                      initials: _getInitials(tache.firstName, tache.lastName),
-                      width: 150,
-                      height: 90,
-                      borderRadius: 20,
-                      avatarColor: Colors.grey),
+                    title: tache.title,
+                    titleWeight: FontWeight.w700,
+                    titleSize: 18,
+                    text: tache.category,
+                    textColor: Colors.blueGrey,
+                    date: tache.date,
+                    status: tache.status,
+                    initials: _getInitials(tache.firstName, tache.lastName),
+                    width: 150,
+                    height: 90,
+                    borderRadius: 20,
+                    avatarColor: Colors.grey,
+                  ),
                 ),
               const SizedBox(height: 10),
               _buildSectionTitle('Stock'),

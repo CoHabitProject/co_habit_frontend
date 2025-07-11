@@ -1,4 +1,6 @@
 import 'package:co_habit_frontend/presentation/screens/depenses/widgets/categorie_depenses_screen.dart';
+import 'package:co_habit_frontend/presentation/screens/home/user_profile_screen.dart';
+import 'package:co_habit_frontend/presentation/screens/maColoc/modifier_stock_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/screens.dart';
 import 'package:co_habit_frontend/data/services/datasources/local/onboarding_service.dart';
 import 'package:co_habit_frontend/presentation/widgets/common/custom_bottom_navbar.dart';
@@ -65,6 +67,15 @@ final appRouter = GoRouter(
         path: '/',
         builder: (context, state) => const SplashScreen(),
       ),
+      GoRoute(
+          path: '/profil',
+          builder: (context, state) => const UserProfileScreen()),
+      GoRoute(
+          path: '/stock/:stockId/edit',
+          builder: (context, state) {
+            final stockId = int.parse(state.pathParameters['stockId']!);
+            return ModifierStockScreen(stockId: stockId);
+          }),
       // Routes avec navbar commune via ShellRoute
       ShellRoute(
         routes: [

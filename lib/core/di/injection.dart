@@ -158,6 +158,7 @@ void _registerUseCases() {
       () => UpdateStockItemListUc(stockItemRepository: getIt()));
   getIt.registerLazySingleton(
       () => DeleteStockItemUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(() => UpdateStockUc(stockRepository: getIt()));
 
   // Dépenses
   getIt.registerLazySingleton(

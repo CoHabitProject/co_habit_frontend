@@ -1,4 +1,5 @@
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/requests/requests.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/stock_provider.dart';
 
@@ -7,6 +8,7 @@ class StockController {
   final GetAllStockItemsUc getAllStockItemsUc;
   final UpdateStockItemListUc? updateStockItemListUc;
   final DeleteStockItemUc? deleteStockItemUc;
+  final UpdateStockUc? updateStockUc;
   final StockProvider stockProvider;
   final int colocationId;
 
@@ -15,6 +17,7 @@ class StockController {
     required this.getAllStockItemsUc,
     this.updateStockItemListUc,
     this.deleteStockItemUc,
+    this.updateStockUc,
     required this.stockProvider,
     required this.colocationId,
   });
@@ -68,5 +71,13 @@ class StockController {
 
     // Retourner les 2 plus bas
     return lowStock.take(2).toList();
+  }
+
+  Future<void> updateStockLocally(StockRequest request, int stockId) async {
+    if (updateStockUc != null) {
+      final updatedStock =
+          await updateStockUc!.execute(request, stockId, colocationId);
+      stockProvider.updateStockLocally(updatedStock as StockModel);
+    }
   }
 }

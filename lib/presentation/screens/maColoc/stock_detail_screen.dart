@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/controllers/floating_navbar_controller.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/data/models/stock_item_model.dart';
@@ -9,6 +10,7 @@ import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/add_stock
 import 'package:co_habit_frontend/presentation/screens/maColoc/widgets/stock_item_card.dart';
 import 'package:co_habit_frontend/presentation/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class StockDetailScreen extends StatefulWidget {
@@ -132,7 +134,17 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
         if (mounted) navigator.pop();
       },
       child: Scaffold(
-        appBar: ScreenAppBar(title: stock.title),
+        backgroundColor: AppTheme.backgroundColor,
+        appBar: ScreenAppBar(
+          title: stock.title,
+          actions: [
+            IconButton(
+                onPressed: () {
+                  context.push(('/stock/${stock.id}/edit'));
+                },
+                icon: const Icon(Icons.edit))
+          ],
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),

@@ -87,4 +87,15 @@ class StockProvider with ChangeNotifier {
     _stock.add(stock);
     notifyListeners();
   }
+
+  void updateStockLocally(StockModel updatedStock) {
+    final index = _stock.indexWhere((s) => s.id == updatedStock.id);
+    if (index == -1) return;
+
+    final currentItems = _stock[index].items;
+
+    // fusionne avec les items existants si non fournis
+    _stock[index] = updatedStock.copyWith(items: currentItems);
+    notifyListeners();
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/config/theme/app_theme.dart';
 import 'package:co_habit_frontend/core/di/injection.dart';
 import 'package:co_habit_frontend/core/services/validation_service.dart';
 import 'package:co_habit_frontend/domain/entities/register_data.dart';
@@ -88,6 +89,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: const ScreenAppBar(title: 'Inscription'),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -119,6 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _usernameController,
           label: 'Nom d\'utilisateur',
+          hintText: 'Toto123',
           validator: (value) =>
               ValidationService.validateName('username', value),
         ),
@@ -126,12 +129,14 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _firstNameController,
           label: 'Prénom',
+          hintText: 'Votre prénom',
           validator: (value) => ValidationService.validateName('prénom', value),
         ),
         const SizedBox(height: 16),
         CustomFormField(
           controller: _lastNameController,
           label: 'Nom',
+          hintText: 'Votre nom',
           validator: (value) =>
               ValidationService.validateName('nom de famille', value),
         ),
@@ -166,6 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _phoneNumberController,
           label: 'Numéro de téléphone',
+          hintText: '06 06 06 06 06',
           maxLength: 10,
           inputType: TextInputType.number,
           validator: (value) => ValidationService.validatePhoneNumber(value),
@@ -174,6 +180,7 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _emailController,
           label: 'Adresse e-mail',
+          hintText: 'monMail@mail.com',
           inputType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 16),
