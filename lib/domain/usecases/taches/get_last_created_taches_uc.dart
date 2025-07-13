@@ -6,6 +6,6 @@ class GetLastCreatedTachesUc {
 
   GetLastCreatedTachesUc(this.repository);
 
-  Future<List<TacheEntity>> execute() async =>
-      await repository.getLastCreatedTaches();
+  Future<List<TacheEntity>> execute(int colocationId) async =>
+      await repository.getLastCreatedTaches(colocationId);
 }

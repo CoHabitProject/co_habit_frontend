@@ -12,7 +12,7 @@ class TacheRepositoryImpl implements TacheRepository {
   TacheRepositoryImpl({required this.tacheRemoteDatasource});
 
   @override
-  Future<void> createTache(TacheEntity tache) async {
+  Future<void> createTache(TacheEntity tache, int colocationId) async {
     try {
       await tacheRemoteDatasource.creerTache(TacheModel.fromEntity(tache));
     } catch (e) {
@@ -21,7 +21,7 @@ class TacheRepositoryImpl implements TacheRepository {
   }
 
   @override
-  Future<List<TacheEntity>> getAllTaches() async {
+  Future<List<TacheEntity>> getAllTaches(int colocationId) async {
     try {
       return await tacheRemoteDatasource.getAllTaches();
     } catch (e) {
@@ -31,7 +31,7 @@ class TacheRepositoryImpl implements TacheRepository {
   }
 
   @override
-  Future<List<TacheEntity>> getLastCreatedTaches() async {
+  Future<List<TacheEntity>> getLastCreatedTaches(int colocationId) async {
     try {
       // TODO : Remplacer quand backend finis
       // return await tacheRemoteDatasource.getLastCreatedTaches();
@@ -71,7 +71,7 @@ class TacheRepositoryImpl implements TacheRepository {
   }
 
   @override
-  Future<TacheEntity> getTacheById(int id) async {
+  Future<TacheEntity> getTacheById(int id, int colocationId) async {
     try {
       return await tacheRemoteDatasource.getTacheById(id);
     } catch (e) {
