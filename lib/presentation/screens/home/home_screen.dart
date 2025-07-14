@@ -60,7 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadRecentTaches() async {
     try {
       final useCase = getIt<GetLastCreatedTachesUc>();
-      final taches = await useCase.execute();
+      final prefs = await SharedPreferences.getInstance();
+      final colocId = prefs.getInt('foyerId');
+      final taches = await useCase.execute(colocId!);
 
       setState(() {
         tachesRecentes = taches;
