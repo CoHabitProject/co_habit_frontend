@@ -8,6 +8,9 @@ import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
+import 'package:co_habit_frontend/domain/usecases/taches/create_tache_uc.dart';
+import 'package:co_habit_frontend/domain/usecases/taches/get_all_taches_uc.dart';
+import 'package:co_habit_frontend/domain/usecases/taches/get_tache_by_id_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -144,7 +147,10 @@ void _registerUseCases() {
   getIt.registerLazySingleton(() => GetFoyerByIdUc(foyerRepository: getIt()));
 
   // Tâches
+  getIt.registerLazySingleton(() => CreerTacheUc(getIt()));
+  getIt.registerLazySingleton(() => GetAllTachesUc(getIt()));
   getIt.registerLazySingleton(() => GetLastCreatedTachesUc(getIt()));
+  getIt.registerLazySingleton(() => GetTacheByIdUc(getIt()));
 
   // Stock
   getIt.registerLazySingleton(() => GetLowestStockUc(stockRepository: getIt()));

@@ -1,4 +1,5 @@
 import 'package:co_habit_frontend/data/models/models.dart';
+import 'package:co_habit_frontend/data/models/tache_category_model.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/create_tache_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/get_all_taches_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/get_last_created_taches_uc.dart';
@@ -35,7 +36,11 @@ class TachesController {
     tachesProvider.setTaches(tachesList);
   }
 
-  // TODO Future<void> creerTache()
+  Future<void> creerTache(TacheModel tache) async
+  {
+    await creerTacheUC.execute(tache, colocationId);
+    tachesProvider.addTache(tache);
+  }
 
   void addTache(TacheModel tache) {
     tachesProvider.addTache(tache);
