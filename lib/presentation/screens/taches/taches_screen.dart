@@ -36,10 +36,34 @@ class _TachesScreenState extends State<TachesScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final colocId = context.read<FoyerProvider>().colocId;
-      final user = context.read<AuthProvider>().user;
+      /*final*/var colocId = context.read<FoyerProvider>().colocId;
+      /*final*/var user = context.read<AuthProvider>().user;
+// Retrait temporaire des final car tant que je ne peux pas test avec
+      //le vrai back j'assigne des valeurs en dur
+      if(colocId==null || user==null) {
+        // ASSIGNEMENT DES VALEURS EN DUR
+        colocId = 42;
+        user = UtilisateurModel(
+            id: 100,
+            firstName: "firstName",
+            lastName: "lastName",
+            email: "email",
+            dateDeNaissance: DateTime(1970, 01, 01),
+            keyCloakSub: "keycloak",
+            phoneNumber: "phoneNumber",
+            username: "username",
+            fullName: "fullName",
+            gender: "gender",
+            createdAt: DateTime(2025,05,05),
+            updatedAt: DateTime(2025,05,05)
+        );
 
-      if(colocId==null || user==null) return;
+        // ÇA DOIT ÊTRE CE CODE EN VRAI
+        // setState(() {
+        //   _controllerInitialized = true;
+        // });
+        // return;
+      };
 
       _tachesController = TachesController(
           creerTacheUC: getIt<CreerTacheUc>(),
@@ -50,9 +74,13 @@ class _TachesScreenState extends State<TachesScreen> {
           colocationId: colocId
       );
 
-      setState(() {
-        _controllerInitialized =true;
-      });
+      await _tachesController.loadTaches();
+
+      if(mounted) {
+        setState(() {
+          _controllerInitialized = true;
+        });
+      }
     });
   }
 
@@ -80,7 +108,7 @@ class _TachesScreenState extends State<TachesScreen> {
                 onTap:(){
                   Navigator.pop(context);
                   showDialog(
-                    context:context,builder:(_)=>const AddCategoryModal()
+                    context:context,builder:(_) => const AddCategoryModal()
                   );
                 }
               )
@@ -110,28 +138,70 @@ class _TachesScreenState extends State<TachesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(!_controllerInitialized){
-      return const Scaffold(
-        body:Center(child: CircularProgressIndicator()),
-      );
-    }
+    // marche pas
+    // if(!_controllerInitialized){
+    //   return const Scaffold(
+    //     body:Center(child: CircularProgressIndicator()),
+    //   );
+    // }
 
     final provider = context.watch<TachesProvider>();
-    final user=context.read<AuthProvider>().user;
+    print('BUILD : nombre de taches dans provider.taches = ${provider.taches.length}');
+    // final user = context.read<AuthProvider>().user;
+    // final colocId = context.read<FoyerProvider>().colocId;
 
+    // COMMENTÉ EN ATTENDANT QUE CE QUI SE TROUVE SUR LES LIGNES
+    // 41 À 65 SOIT OPÉRATIONNEL
+    // if(user == null || colocId == null) {
+    //   return const Scaffold(
+    //     body: Center(child: Text("Impossible de charger les tâches"))
+    //   );
+    // }
+
+    if (provider.taches.isEmpty) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator())
+      );
+
+      // marche pas
+      // // Force rebuild sans rien faire, pour forcer le provider à renvoyer les données
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   setState(() {});
+      // });
+    }
+
+    // return Scaffold(
+    //   backgroundColor: AppTheme.backgroundColor,
+    //   appBar: const ScreenAppBar(title: 'Tâches'),
+    //   body: SafeArea(
+    //     child:SingleChildScrollView(
+    //       padding:const EdgeInsets.all(16),
+    //       child:Column(
+    //         crossAxisAlignment: CrossAxisAlignment.stretch,
+    //         children:[
+    //           _buildMesTachesCard(provider.taches)
+    //         ]
+    //       )
+    //     )
+    //   )
+    // );
+    // le code commenté ne marche pas ci-dessus
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
       appBar: const ScreenAppBar(title: 'Tâches'),
-      body: SafeArea(
-        child:SingleChildScrollView(
-          padding:const EdgeInsets.all(16),
-          child:Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children:[
-              _buildMesTachesCard(provider.taches)
-            ]
-          )
-        )
+      body: ListView(
+        children: provider.taches.map((tache) {
+          return ListTile(
+            title: Text(tache.title),
+            subtitle: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Container(
+                color: tache.status.color,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Text('Status : ${tache.status.label}'),
+              ),
+            ),
+          );
+        }).toList(),
       )
     );
   }

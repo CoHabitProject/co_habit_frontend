@@ -5,6 +5,8 @@ import 'package:co_habit_frontend/domain/usecases/taches/get_all_taches_uc.dart'
 import 'package:co_habit_frontend/domain/usecases/taches/get_last_created_taches_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/taches/get_tache_by_id_uc.dart';
 import 'package:co_habit_frontend/presentation/providers/taches_provider.dart';
+import 'package:co_habit_frontend/presentation/screens/taches/utils/tache_status_enum.dart';
+import 'package:flutter/foundation.dart';
 
 class TachesController {
   final CreerTacheUc creerTacheUC;
@@ -25,8 +27,31 @@ class TachesController {
   });
 
   Future<void> loadTaches() async {
-    final taches = await getLastCreatedTachesUc.execute(colocationId);
-    final tachesList = taches.whereType<TacheModel>().toList();
+    // ==> FONCTIONNEMENT NORMAL
+    // final taches = await getLastCreatedTachesUc.execute(colocationId);
+    // final tachesList = taches.whereType<TacheModel>().toList();
+    // tachesProvider.setTaches(tachesList);
+    final tachesList = [
+      TacheModel(
+        id: 1,
+        firstName: "Alice",
+        lastName: "B.",
+        title: "Passer l'aspirateur",
+        date: DateTime.now(),
+        category: "Tâche ménagère",
+        status: TacheStatus.enCours,
+      ),
+      TacheModel(
+        id: 2,
+        firstName: "Bob",
+        lastName: "C.",
+        title: "Sortir les poubelles",
+        date: DateTime.now().add(const Duration(days: 1)),
+        category: "Tâche ménagère",
+        status: TacheStatus.enAttente,
+      ),
+    ];
+
     tachesProvider.setTaches(tachesList);
   }
 
