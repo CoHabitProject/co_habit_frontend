@@ -75,6 +75,7 @@ class _RejoindreColocScreenState extends State<RejoindreColocScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(),
       body: SafeArea(
           child: Center(

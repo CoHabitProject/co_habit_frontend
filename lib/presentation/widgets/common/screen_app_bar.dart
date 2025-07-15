@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class ScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const ScreenAppBar({super.key, required this.title});
+  final List<Widget>? actions;
+  const ScreenAppBar({super.key, required this.title, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +17,7 @@ class ScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: AppTheme.backgroundColor,
+      actions: actions,
     );
   }
 

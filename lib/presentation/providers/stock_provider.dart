@@ -74,8 +74,8 @@ class StockProvider with ChangeNotifier {
     final stockIndex = _stock.indexWhere((s) => s.id == stockId);
     if (stockIndex == -1) return;
 
-    // On set dans la map le boolean a true pour faire la suppression en bdd
     _itemsToDelete[itemId] = true;
+    _pendingItemUpdates.remove(itemId);
 
     final stock = _stock[stockIndex];
     final items = stock.items.where((item) => item.id != itemId).toList();
@@ -85,6 +85,44 @@ class StockProvider with ChangeNotifier {
 
   void addStock(StockModel stock) {
     _stock.add(stock);
+    notifyListeners();
+  }
+
+  void updateStockLocally(StockModel updatedStock) {
+    final index = _stock.indexWhere((s) => s.id == updatedStock.id);
+    if (index == -1) return;
+
+    final currentItems = _stock[index].items;
+
+    // fusionne avec les items existants si non fournis
+    _stock[index] = updatedStock.copyWith(items: currentItems);
+    notifyListeners();
+  }
+
+  void removeItemCompletely(int stockId, int itemId) {
+    removeItemLocally(stockId, itemId);
+    _itemsToDelete.remove(itemId);
+  }
+
+  void updateItemLocally({
+    required int stockId,
+    required int itemId,
+    required String newName,
+    required int newQuantity,
+  }) {
+    final stockIndex = _stock.indexWhere((s) => s.id == stockId);
+    if (stockIndex == -1) return;
+
+    final stock = _stock[stockIndex];
+    final updatedItems = stock.items.map((item) {
+      final itemModel = item as StockItemModel;
+      if (itemModel.id == itemId) {
+        return itemModel.copyWith(name: newName, quantity: newQuantity);
+      }
+      return item;
+    }).toList();
+
+    _stock[stockIndex] = stock.copyWith(items: updatedItems);
     notifyListeners();
   }
 }

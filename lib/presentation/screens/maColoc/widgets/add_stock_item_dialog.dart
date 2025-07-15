@@ -35,13 +35,11 @@ class AddStockItemDialog extends StatelessWidget {
 
     Future<void> onSubmitForm() async {
       if (formKey.currentState!.validate()) {
-        // sauvegarde en bdd
         try {
-          // Création du request
           final StockItemRequest request = StockItemRequest(
               name: nameController.text.trim(),
               quantity: int.parse(quantityController.text.trim()));
-          // Récuperation de l'id de la coloc
+
           final colocationId =
               Provider.of<FoyerProvider>(context, listen: false).colocId;
 
@@ -50,6 +48,22 @@ class AddStockItemDialog extends StatelessWidget {
             final result =
                 await useCase.execute(colocationId, stockId, request);
             stockProvider.addItemLocally(stockId, result as StockItemModel);
+
+            if (context.mounted) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Item ajouté avec succès ',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  duration: Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                  margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  backgroundColor: Color(0xFF2E7D32),
+                ),
+              );
+            }
           }
         } catch (e, stack) {
           _log.error('[AddStockItemDialog] Error dans l\'ajout d\'un item: $e',
@@ -90,23 +104,7 @@ class AddStockItemDialog extends StatelessWidget {
             CohabitButton(
               text: 'Valider',
               buttonType: ButtonType.gradient,
-              onPressed: () {
-                onSubmitForm();
-                Navigator.pop(context);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Item ajouté avec succès ',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    duration: Duration(seconds: 2),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    backgroundColor: Color(0xFF2E7D32),
-                  ),
-                );
-              },
+              onPressed: onSubmitForm,
             )
           ],
         ),

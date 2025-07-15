@@ -65,4 +65,9 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+
+  void setUser(UtilisateurModel user) {
+    _user = user;
+    notifyListeners();
+  }
 }

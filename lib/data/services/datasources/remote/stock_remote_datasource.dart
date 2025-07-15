@@ -11,7 +11,8 @@ import 'package:get_it/get_it.dart';
 abstract class StockRemoteDatasource {
   Future<List<StockModel>> getLowestStock();
   Future<List<StockModel>> getAllStock(int colocationId);
-  Future<StockModel> updateStock(StockRequest stock);
+  Future<StockModel> updateStock(
+      StockRequest stock, int stockId, int colocationId);
   Future<StockModel> save(StockRequest stock, int colocationId);
 }
 
@@ -54,9 +55,12 @@ class StockRemoteDatasourceImpl implements StockRemoteDatasource {
   }
 
   @override
-  Future<StockModel> updateStock(StockRequest stock) async {
+  Future<StockModel> updateStock(
+      StockRequest stock, int stockId, int colocationId) async {
     try {
-      final response = await dio.post('/stock/updateStock', data: stock);
+      final response = await dio.put(
+          AppConstants.updateStockRoute(colocationId, stockId),
+          data: stock);
       final json = response.data;
 
       if (response.statusCode == 200) {

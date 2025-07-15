@@ -8,6 +8,7 @@ import 'package:co_habit_frontend/data/repositories/repositories_impl.dart';
 import 'package:co_habit_frontend/data/services/datasources/datasources.dart';
 import 'package:co_habit_frontend/data/services/interceptors/token_interceptor.dart';
 import 'package:co_habit_frontend/domain/repositories/repositories.dart';
+import 'package:co_habit_frontend/domain/usecases/stock/update_stock_item_uc.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
@@ -158,6 +159,9 @@ void _registerUseCases() {
       () => UpdateStockItemListUc(stockItemRepository: getIt()));
   getIt.registerLazySingleton(
       () => DeleteStockItemUc(stockItemRepository: getIt()));
+  getIt.registerLazySingleton(() => UpdateStockUc(stockRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => UpdateStockItemUc(stockItemRepository: getIt()));
 
   // Dépenses
   getIt.registerLazySingleton(

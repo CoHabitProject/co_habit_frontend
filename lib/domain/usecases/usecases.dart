@@ -1,3 +1,4 @@
+export 'package:co_habit_frontend/domain/usecases/stock/update_stock_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/depenses/creer_depense_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/stock/creer_stock_item_uc.dart';
 export 'package:co_habit_frontend/domain/usecases/stock/delete_stock_item_uc.dart';

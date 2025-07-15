@@ -30,6 +30,9 @@ class AppConstants {
           int colocationId, int stockId, int itemId) =>
       '/interne/colocations/$colocationId/stocks/$stockId/items/$itemId';
 
+  static String updateStockRoute(int colocationId, int stockId) =>
+      '/interne/colocations/$colocationId/stocks/$stockId';
+
   // API Depenses routes
   static const String creerDepenseRoute = '/expenses';
 

@@ -61,21 +61,24 @@ class StockRepositoryImpl implements StockRepository {
   }
 
   @override
-  Future<StockEntity> updateStock(StockRequest request) async {
-    try {
-      return stockRemoteDatasource.updateStock(request);
-    } catch (e) {
-      _log.error('Repository Error on updateStock : $e');
-      rethrow;
-    }
-  }
-
-  @override
   Future<StockEntity> save(StockRequest request, int colocationId) async {
     try {
       return await stockRemoteDatasource.save(request, colocationId);
     } catch (e) {
       _log.error('Repository Error on save: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<StockEntity> updateStock(
+      StockRequest stock, int stockId, int colocationId) async {
+    try {
+      return await stockRemoteDatasource.updateStock(
+          stock, stockId, colocationId);
+    } catch (e, stack) {
+      _log.error('[StockRepositoryImpl] API Error on updateStock: $e',
+          stackTrace: stack);
       rethrow;
     }
   }
