@@ -62,6 +62,10 @@ final appRouter = GoRouter(
         builder: (context, state) => const AjouterDepenseScreen(),
       ),
       GoRoute(
+        path: '/creerTache',
+        builder: (context, state) => const AjouterTacheScreen()
+      ),
+      GoRoute(
         path: '/',
         builder: (context, state) => const SplashScreen(),
       ),
