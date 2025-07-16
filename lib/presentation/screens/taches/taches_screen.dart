@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/presentation/widgets/common/screen_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class TachesScreen extends StatefulWidget {
@@ -10,6 +11,14 @@ class TachesScreen extends StatefulWidget {
 class _TachesScreenState extends State<TachesScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: const ScreenAppBar(title: 'Tâches'),
+      body: Center(
+        child: Image.asset(
+          'assets/images/onboarding/wip.png',
+          height: 300,
+        ),
+      ),
+    );
   }
 }
