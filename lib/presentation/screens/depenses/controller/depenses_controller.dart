@@ -1,6 +1,7 @@
 import 'package:co_habit_frontend/data/models/depense_category_model.dart';
 import 'package:co_habit_frontend/data/models/depense_model.dart';
 import 'package:co_habit_frontend/data/models/requests/depense_request.dart';
+import 'package:co_habit_frontend/data/models/utilisateur_model.dart';
 import 'package:co_habit_frontend/domain/usecases/usecases.dart';
 import 'package:co_habit_frontend/presentation/providers/providers.dart';
 
@@ -75,5 +76,31 @@ class DepensesController {
     }
 
     return grouped;
+  }
+
+  Map<int, double> calculerRepartitionEquitable(
+      List<UtilisateurModel> colocataires) {
+    final depenses = depensesProvider.depenses;
+
+    // Initialisation de la map avec tous les colocataires
+    final repartition = <int, double>{
+      for (final user in colocataires) user.id: 0.0
+    };
+
+    for (final depense in depenses) {
+      final montantParPersonne = depense.amount / colocataires.length;
+
+      // Tous doivent "payer" une part
+      for (final coloc in colocataires) {
+        repartition[coloc.id] =
+            (repartition[coloc.id] ?? 0) - montantParPersonne;
+      }
+
+      // Le payeur reçoit le montant total
+      repartition[depense.user.id] =
+          (repartition[depense.user.id] ?? 0) + depense.amount;
+    }
+
+    return repartition;
   }
 }

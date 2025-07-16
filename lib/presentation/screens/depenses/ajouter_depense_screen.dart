@@ -62,7 +62,7 @@ class _AjouterDepenseScreenState extends State<AjouterDepenseScreen> {
               CustomFormField(
                 controller: _amountController,
                 label: 'Montant (€)',
-                inputType: TextInputType.number,
+                inputType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<DepenseCategoryModel>(
@@ -108,7 +108,8 @@ class _AjouterDepenseScreenState extends State<AjouterDepenseScreen> {
       return DepenseRequest(
           title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
-          amount: double.parse(_amountController.text.trim()),
+          amount:
+              double.parse(_amountController.text.trim().replaceAll(',', '.')),
           colocationId: colocationId,
           usersId: [user.id]);
     }

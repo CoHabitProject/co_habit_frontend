@@ -25,6 +25,7 @@ class _DepensesScreenState extends State<DepensesScreen> {
   late DepensesController _depensesController;
   bool _controllerInitialized = false;
   String selectedMonth = '';
+  bool _isBottomSheetOpen = false;
 
   @override
   void initState() {
@@ -57,37 +58,45 @@ class _DepensesScreenState extends State<DepensesScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    List<ListTile> actions = [
+      ListTile(
+        title: const Text('Ajouter une dépense',
+            style: TextStyle(color: Colors.blue)),
+        onTap: () {
+          Navigator.pop(context);
+          context.push('/creerDepense');
+        },
+      ),
+      ListTile(
+        title: const Text('Ajouter une nouvelle catégorie',
+            style: TextStyle(color: Colors.blue)),
+        onTap: () {
+          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (_) => const AddCategoryModal(),
+          );
+        },
+      ),
+    ];
+
     context.read<FloatingNavbarController>().setActionForRoute(
       '/depenses',
       () {
-        showCustomActionSheet(
-          context: context,
-          title: 'Ajouter une nouvelle dépense',
-          subTitle: 'Tu peux ajouter une dépense ou catégorie',
-          actions: [
-            ListTile(
-              title: const Text('Ajouter une dépense',
-                  style: TextStyle(color: Colors.blue)),
-              onTap: () {
-                Navigator.pop(context);
-                context.push('/creerDepense');
-              },
-            ),
-            ListTile(
-              title: const Text('Ajouter une nouvelle catégorie',
-                  style: TextStyle(color: Colors.blue)),
-              onTap: () {
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (_) => const AddCategoryModal(),
-                );
-              },
-            ),
-          ],
-        );
+        showDepensesMenu(context, actions);
       },
     );
+  }
+
+  void showDepensesMenu(BuildContext context, List<ListTile> actions) {
+    if (_isBottomSheetOpen) return;
+    _isBottomSheetOpen = true;
+    showCustomActionSheet(
+      context: context,
+      title: 'Ajouter une nouvelle dépense',
+      subTitle: 'Tu peux ajouter une dépense ou catégorie',
+      actions: actions,
+    ).whenComplete(() => _isBottomSheetOpen = false);
   }
 
   String _getMonthName(int month) {
@@ -168,8 +177,15 @@ class _DepensesScreenState extends State<DepensesScreen> {
           ),
         ),
         const SizedBox(height: 16),
-        Text('€ ${total.toStringAsFixed(2)}',
-            style: const TextStyle(fontSize: 40)),
+        GestureDetector(
+          onTap: () {
+            context.push('/repartitionDepenses');
+          },
+          child: Text(
+            '€ ${total.toStringAsFixed(2)}',
+            style: const TextStyle(fontSize: 40),
+          ),
+        ),
       ],
     );
   }

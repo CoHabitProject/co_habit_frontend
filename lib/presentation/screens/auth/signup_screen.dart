@@ -121,15 +121,14 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _usernameController,
           label: 'Nom d\'utilisateur',
-          hintText: 'Toto123',
+          hintText: 'Voter nom d\'utilisateur',
           validator: (value) =>
               ValidationService.validateName('username', value),
         ),
         const SizedBox(height: 16),
         CustomFormField(
           controller: _firstNameController,
-          label: 'Prénom',
-          hintText: 'Votre prénom',
+          label: 'Votre prénom',
           validator: (value) => ValidationService.validateName('prénom', value),
         ),
         const SizedBox(height: 16),
@@ -144,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _birthDateController,
           label: 'Date de naissance',
-          hintText: '01/01/1970',
+          hintText: 'Ex : 01/01/1970',
           readOnly: true,
           suffixIcon: IconButton(
             onPressed: _selectDate,
@@ -171,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _phoneNumberController,
           label: 'Numéro de téléphone',
-          hintText: '06 06 06 06 06',
+          hintText: 'Ex: 06 06 06 06 06',
           maxLength: 10,
           inputType: TextInputType.number,
           validator: (value) => ValidationService.validatePhoneNumber(value),
@@ -180,7 +179,7 @@ class _SignupScreenState extends State<SignupScreen> {
         CustomFormField(
           controller: _emailController,
           label: 'Adresse e-mail',
-          hintText: 'monMail@mail.com',
+          hintText: 'Ex: monMail@mail.com',
           inputType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 16),

@@ -1,3 +1,4 @@
+import 'package:co_habit_frontend/presentation/screens/depenses/repartition_depenses_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/depenses/widgets/categorie_depenses_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/home/user_profile_screen.dart';
 import 'package:co_habit_frontend/presentation/screens/maColoc/modifier_stock_screen.dart';
@@ -76,6 +77,10 @@ final appRouter = GoRouter(
             final stockId = int.parse(state.pathParameters['stockId']!);
             return ModifierStockScreen(stockId: stockId);
           }),
+      GoRoute(
+        path: '/repartitionDepenses',
+        builder: (context, state) => const RepartitionDepensesScreen(),
+      ),
       // Routes avec navbar commune via ShellRoute
       ShellRoute(
         routes: [

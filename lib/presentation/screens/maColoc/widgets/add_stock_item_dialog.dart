@@ -88,15 +88,16 @@ class AddStockItemDialog extends StatelessWidget {
             CustomFormField(
               controller: nameController,
               label: 'Nom',
-              hintText: 'Mouchoir, Papier toilette...',
+              hintText: 'Ex: Mouchoir, Papier toilette...',
               validator: (value) => ValidationService.validateRequiredField(
                   value, 'le nom de l\'élément'),
             ),
             const SizedBox(height: 12),
             CustomFormField(
               controller: quantityController,
-              label: 'Quantité maximale',
-              hintText: '9999',
+              inputType: const TextInputType.numberWithOptions(),
+              label: 'Quantité',
+              hintText: 'Ex: 2',
               validator: (value) => ValidationService.validateMaxCapacity(
                   value, 'la quantité maximale', remainingCapacity),
             ),
